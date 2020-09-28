@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Backend for react.js frontend of CollabEdit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaymittur28/CollabEdit.git"
+  },
+  "author": "Ajay Mittur",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajaymittur28/CollabEdit/issues"
+  },
+  "homepage": "https://github.com/ajaymittur28/CollabEdit#readme"
+}
