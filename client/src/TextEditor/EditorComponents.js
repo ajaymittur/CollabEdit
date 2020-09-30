@@ -74,7 +74,7 @@ export const EditorLinkButton = React.forwardRef(
 );
 
 export const EditorPaper = React.forwardRef(({ ...props }, ref) => (
-  <Paper elevation={3} style={{ padding: "10px" }}>
+  <Paper elevation={3} style={{ padding: "10px 20px 10px 20px" }}>
     <Editable {...props} ref={ref} />
   </Paper>
 ));
