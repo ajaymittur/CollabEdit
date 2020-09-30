@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { Editable } from "slate-react";
 import { Button, Icon, Toolbar, AppBar, Paper } from "@material-ui/core";
 
@@ -35,14 +34,6 @@ export const EditorIcon = React.forwardRef(({ className, icon, ...props }, ref) 
     {icon}
   </Icon>
 ));
-
-export const Instruction = React.forwardRef(({ className, ...props }, ref) => (
-  <div {...props} ref={ref} />
-));
-
-export const Portal = ({ children }) => {
-  return ReactDOM.createPortal(children, document.body);
-};
 
 export const EditorToolbar = React.forwardRef(({ className, ...props }, ref) => (
   <AppBar position="static">
