@@ -33,17 +33,22 @@ app.post("/login", async (req, res) => {
   if (!username || !password) return res.status(400).json("Incorrect Login");
 
   try {
-    const salt = bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
-  } catch {
-    return res.status(500).json("Invalid Password");
+    const existingUser = await User.findOne({ username });
+    if (!existingUser) return res.status(400).json("User Doesnt Exist");
+
+    const validPassword = await bcrypt.compare(password, existingUser.password);
+    if (!validPassword) return res.status(400).send("Invalid Password");
+  } catch (err) {
+    return res.status(500).json(err);
   }
 
   const token = generate.generateToken(req.body);
-
-  res.json({ ...req.body, token });
-
-  console.log("Log In");
+  console.log("Logged In!");
+  const response = {
+    username,
+    token,
+  };
+  return res.json(response);
 });
 
 //Sign Up
@@ -66,8 +71,9 @@ app.post("/signup", async (req, res) => {
 
     try {
       const existingUser = await User.findOne({ email });
-      if (existingUser) return res.status(540).json("User Already Exists");
+      if (existingUser) return res.status(400).json("User Already Exists");
       const savedUser = await user.save();
+      console.log(savedUser);
     } catch (err) {
       return res.status(500).json(err);
     }
