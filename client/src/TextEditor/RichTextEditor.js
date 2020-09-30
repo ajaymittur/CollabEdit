@@ -5,7 +5,7 @@ import { withReact, useSlate, Slate } from "slate-react";
 import { Editor, Transforms, Range, createEditor } from "slate";
 import { withHistory } from "slate-history";
 
-import { EditorButton, EditorToolbar, EditorPaper } from "./EditorComponents";
+import { EditorButton, EditorLinkButton, EditorToolbar, EditorPaper } from "./EditorComponents";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -29,7 +29,7 @@ function RichTextEditor() {
         <MarkButton format="italic" icon="format_italic" />
         <MarkButton format="underline" icon="format_underlined" />
         <MarkButton format="code" icon="code" />
-        <BlockButton format="link" icon="link" />
+        <LinkButton format="link" icon="link" />
         <BlockButton format="heading-one" icon="looks_one" />
         <BlockButton format="heading-two" icon="looks_two" />
         <BlockButton format="block-quote" icon="format_quote" />
@@ -84,7 +84,7 @@ const withLinks = (editor) => {
   return editor;
 };
 
-const wrapLink = (editor, url = "") => {
+const wrapLink = (editor, url) => {
   if (isBlockActive(editor, "link")) {
     Transforms.unwrapNodes(editor, { match: (n) => n.type === "link" });
   }
@@ -105,23 +105,19 @@ const wrapLink = (editor, url = "") => {
   }
 };
 
+const toggleLink = (editor, url, isActive) => {
+  if (!isActive) {
+    if (editor.selection && url) {
+      wrapLink(editor, url);
+    }
+  } else {
+    Transforms.unwrapNodes(editor, { match: (n) => n.type === "link" });
+  }
+};
+
 const toggleBlock = (editor, format) => {
   const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
-  const isLink = format === "link";
-
-  if (isLink) {
-    if (!isActive) {
-      // TODO: change this to render an input
-      const url = window.prompt("Enter the URL of the link:");
-      if (editor.selection && url) {
-        wrapLink(editor, url);
-      }
-    } else {
-      Transforms.unwrapNodes(editor, { match: (n) => n.type === "link" });
-    }
-    return;
-  }
 
   Transforms.unwrapNodes(editor, {
     match: (n) => LIST_TYPES.includes(n.type),
@@ -215,6 +211,18 @@ const BlockButton = ({ format, icon }) => {
         event.preventDefault();
         toggleBlock(editor, format);
       }}
+      icon={icon}
+    />
+  );
+};
+
+const LinkButton = ({ format, icon }) => {
+  const editor = useSlate();
+  return (
+    <EditorLinkButton
+      active={isBlockActive(editor, format)}
+      editor={editor}
+      toggleLink={toggleLink}
       icon={icon}
     />
   );

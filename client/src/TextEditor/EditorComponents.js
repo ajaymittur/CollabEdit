@@ -1,6 +1,16 @@
 import React from "react";
 import { Editable } from "slate-react";
-import { Button, Icon, Toolbar, AppBar, Paper } from "@material-ui/core";
+import {
+  Button,
+  Icon,
+  Toolbar,
+  AppBar,
+  Paper,
+  TextField,
+  Dialog,
+  DialogContent,
+  DialogActions,
+} from "@material-ui/core";
 
 export const EditorButton = React.forwardRef(
   ({ className, active, reversed, icon, ...props }, ref) => (
@@ -8,6 +18,59 @@ export const EditorButton = React.forwardRef(
       <Icon>{icon}</Icon>
     </Button>
   )
+);
+
+export const EditorLinkButton = React.forwardRef(
+  ({ className, active, icon, editor, toggleLink, ...props }, ref) => {
+    const [open, setOpen] = React.useState(false);
+    const [url, setUrl] = React.useState();
+    const [selection, setSelection] = React.useState();
+
+    const handleClose = () => {
+      setUrl("");
+      setOpen(false);
+    };
+
+    const handleEnter = () => {
+      setOpen(false);
+      editor.selection = selection;
+      toggleLink(editor, url, active);
+    };
+
+    return (
+      <span>
+        <Button
+          color={active ? "secondary" : "inherit"}
+          {...props}
+          ref={ref}
+          onMouseDown={() => setSelection(editor.selection)}
+          onClick={() => (active ? toggleLink(editor, url, active) : setOpen(true))}>
+          <Icon>{icon}</Icon>
+        </Button>
+        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="url"
+              label="URL"
+              type="text"
+              onChange={(e) => setUrl(e.target.value)}
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleEnter} color="primary">
+              Enter
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </span>
+    );
+  }
 );
 
 export const EditorPaper = React.forwardRef(({ ...props }, ref) => (
