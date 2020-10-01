@@ -26,7 +26,6 @@ function RichTextEditor() {
   useEffect(() => {
     const autoSave = setInterval(() => {
       localStorage.setItem("content", JSON.stringify(value));
-      console.log(value[0].children[0].text);
     }, 3000);
     return () => clearInterval(autoSave);
   }, [value]);
