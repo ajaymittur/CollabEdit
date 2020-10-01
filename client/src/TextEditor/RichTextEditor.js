@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
 import { withReact, useSlate, Slate } from "slate-react";
@@ -17,10 +17,19 @@ const HOTKEYS = {
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
 function RichTextEditor() {
-  const [value, setValue] = useState(initialValue);
+  const saved = JSON.parse(localStorage.getItem("content"));
+  const [value, setValue] = useState(saved || initialValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
+
+  useEffect(() => {
+    const autoSave = setInterval(() => {
+      localStorage.setItem("content", JSON.stringify(value));
+      console.log(value[0].children[0].text);
+    }, 3000);
+    return () => clearInterval(autoSave);
+  }, [value]);
 
   return (
     <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
@@ -249,8 +258,6 @@ const MarkButton = ({ format, icon }) => {
   );
 };
 
-// TODO: Empty initialValue
-// Filled right now to ensure all the nodes work as expected
 const initialValue = [
   {
     type: "paragraph",
