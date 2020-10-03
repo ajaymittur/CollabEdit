@@ -38,7 +38,7 @@ export const EditorLinkButton = React.forwardRef(
     };
 
     return (
-      <span>
+      <>
         <Button
           color={active ? "secondary" : "inherit"}
           {...props}
@@ -68,7 +68,7 @@ export const EditorLinkButton = React.forwardRef(
             </Button>
           </DialogActions>
         </Dialog>
-      </span>
+      </>
     );
   }
 );
