@@ -38,15 +38,10 @@ function RichTextEditor() {
   }, []);
 
   useEffect(() => {
-    // TODO: use setTimeout to improve performance since if editor is idle,
-    // we still save the "same" value every 3s which is undesirable
-    // instead we can use setTimeout to introduce a delay on each value change and only
-    // save if the value doesn't change for more than 3s i.e. editor has likely become idle
-    // will reduce cache writes from 1 every 3s to 1 every value change and idle for 3s
-    const autoSave = setInterval(() => {
+    const autoSave = setTimeout(() => {
       localStorage.setItem("content", JSON.stringify(value));
     }, 3000);
-    return () => clearInterval(autoSave);
+    return () => clearTimeout(autoSave);
   }, [value]);
 
   const handleChange = (value) => {
