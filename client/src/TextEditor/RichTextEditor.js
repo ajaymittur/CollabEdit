@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import io from "socket.io-client";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
 import { withReact, useSlate, Slate } from "slate-react";
@@ -15,6 +16,9 @@ const HOTKEYS = {
 };
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
+const ENDPOINT = "http://localhost:4000/";
+
+let socket = undefined;
 
 function RichTextEditor() {
   const saved = JSON.parse(localStorage.getItem("content"));
@@ -24,14 +28,34 @@ function RichTextEditor() {
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+
+    socket.on("new-remote-value", (newValue) => {
+      setValue(newValue);
+    });
+
+    return () => socket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // TODO: use setTimeout to improve performance since if editor is idle,
+    // we still save the "same" value every 3s which is undesirable
+    // instead we can use setTimeout to introduce a delay on each value change and only
+    // save if the value doesn't change for more than 3s i.e. editor has likely become idle
+    // will reduce cache writes from 1 every 3s to 1 every value change and idle for 3s
     const autoSave = setInterval(() => {
       localStorage.setItem("content", JSON.stringify(value));
     }, 3000);
     return () => clearInterval(autoSave);
   }, [value]);
 
+  const handleChange = (value) => {
+    setValue(value);
+    socket.emit("new-value", value);
+  };
+
   return (
-    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
+    <Slate editor={editor} value={value} onChange={handleChange}>
       <EditorToolbar>
         <MarkButton format="bold" icon="format_bold" />
         <MarkButton format="italic" icon="format_italic" />
