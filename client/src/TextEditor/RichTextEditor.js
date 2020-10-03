@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import io from "socket.io-client";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
+import { useParams } from "react-router-dom";
 import { withReact, useSlate, Slate } from "slate-react";
 import { Editor, Transforms, Range, createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -22,6 +23,7 @@ let socket = undefined;
 
 function RichTextEditor() {
   const saved = JSON.parse(localStorage.getItem("content"));
+  const { groupId } = useParams();
   const [value, setValue] = useState(saved || initialValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
@@ -30,7 +32,7 @@ function RichTextEditor() {
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    socket.on("new-remote-value", (newValue) => {
+    socket.on(`new-value-${groupId}`, (newValue) => {
       setValue(newValue);
     });
 
@@ -46,7 +48,7 @@ function RichTextEditor() {
 
   const handleChange = (value) => {
     setValue(value);
-    socket.emit("new-value", value);
+    socket.emit("new-value", groupId, value);
   };
 
   return (

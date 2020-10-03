@@ -15,8 +15,8 @@ const io = require("socket.io")(http);
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on("new-value", (newValue) => {
-    socket.broadcast.emit("new-remote-value", newValue);
+  socket.on("new-value", (groupId, newValue) => {
+    socket.broadcast.emit(`new-value-${groupId}`, newValue);
   });
 
   socket.on("disconnect", () => {
