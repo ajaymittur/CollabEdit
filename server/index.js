@@ -3,9 +3,14 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 const authenticate = require("./middleware/authenticateToken");
-const generate = require("./models/generateToken");
+const generate = require("./controllers/generateToken");
+const User = require("./models/User");
+const signin = require("./controllers/signin");
+const login = require("./controllers/login");
 
 const app = express();
 
@@ -27,23 +32,29 @@ io.on("connection", (socket) => {
 app.use(express.json());
 app.use(cors());
 
+mongoose.connect(
+  process.env.MONGO_URI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => console.log("Connected to DB!")
+);
+mongoose.set("useCreateIndex", true);
+
+//ROUTES
+
 app.get("/", (req, res) => {
   console.log("Home!");
 });
 
-app.post("/login", (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json("Incorrect Login");
+//Sign Up
 
-  const accessToken = generate.generateToken(req.body);
-
-  res.json({ accessToken });
-
-  console.log("Log In");
+app.post("/signup", async (req, res) => {
+  signin.handleSignin(req, res, bcrypt, User, generate);
 });
 
-app.post("/signup", (req, res) => {
-  console.log("Sign Up");
+//Log In
+
+app.post("/login", async (req, res) => {
+  login.handleLogin(req, res, bcrypt, User, generate);
 });
 
 http.listen(process.env.PORT || 4000, () => {
