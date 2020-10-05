@@ -14,6 +14,21 @@ const login = require("./controllers/login");
 
 const app = express();
 
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
+
+io.on("connection", (socket) => {
+  console.log("a user connected");
+
+  socket.on("new-value", (groupId, newValue) => {
+    socket.broadcast.emit(`new-value-${groupId}`, newValue);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("a user disconnected");
+  });
+});
+
 app.use(express.json());
 app.use(cors());
 
@@ -42,6 +57,6 @@ app.post("/login", async (req, res) => {
   login.handleLogin(req, res, bcrypt, User, generate);
 });
 
-app.listen(process.env.PORT || 4000, () => {
-  console.log("Working on Port 4000");
+http.listen(process.env.PORT || 4000, () => {
+  console.log("Listening on Port 4000");
 });
