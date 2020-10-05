@@ -1,19 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import io from "socket.io-client";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
-import { useParams } from "react-router-dom";
 import { withReact, useSlate, Slate } from "slate-react";
 import { Editor, Transforms, Range, createEditor } from "slate";
 import { withHistory } from "slate-history";
 
-import {
-  EditorButton,
-  EditorLinkButton,
-  EditorToolbar,
-  EditorPaper,
-  EditorSaveButton,
-} from "./EditorComponents";
+import { EditorButton, EditorLinkButton, EditorToolbar, EditorPaper } from "./EditorComponents";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -23,63 +15,35 @@ const HOTKEYS = {
 };
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
-const ENDPOINT = "http://localhost:4000/";
-
-let socket = undefined;
 
 function RichTextEditor() {
   const saved = JSON.parse(localStorage.getItem("content"));
-  const { groupId } = useParams();
   const [value, setValue] = useState(saved || initialValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
 
   useEffect(() => {
-    socket = io(ENDPOINT);
-
-    socket.on(`new-value-${groupId}`, (newValue) => {
-      setValue(newValue);
-    });
-
-    return () => socket.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const autoSave = setTimeout(() => {
+    const autoSave = setInterval(() => {
       localStorage.setItem("content", JSON.stringify(value));
     }, 3000);
-    return () => clearTimeout(autoSave);
+    return () => clearInterval(autoSave);
   }, [value]);
 
-  const handleChange = (value) => {
-    setValue(value);
-    socket.emit("new-value", groupId, value);
-  };
-
   return (
-    <Slate editor={editor} value={value} onChange={handleChange}>
+    <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
       <EditorToolbar>
-        {[
-          ["bold", "format_bold"],
-          ["italic", "format_italic"],
-          ["underline", "format_underlined"],
-          ["code", "code"],
-        ].map(([format, icon]) => (
-          <MarkButton format={format} icon={icon} />
-        ))}
+        <MarkButton format="bold" icon="format_bold" />
+        <MarkButton format="italic" icon="format_italic" />
+        <MarkButton format="underline" icon="format_underlined" />
+        <MarkButton format="code" icon="code" />
         <LinkButton format="link" icon="link" />
-        {[
-          ["heading-one", "looks_one"],
-          ["heading-two", "looks_two"],
-          ["heading-three", "looks_3"],
-          ["block-quote", "format_quote"],
-          ["numbered-list", "format_list_numbered"],
-          ["bulleted-list", "format_list_bulleted"],
-        ].map(([format, icon]) => (
-          <BlockButton format={format} icon={icon} />
-        ))}
-        <EditorSaveButton editor={editor} ENDPOINT={ENDPOINT} />
+        <BlockButton format="heading-one" icon="looks_one" />
+        <BlockButton format="heading-two" icon="looks_two" />
+        <BlockButton format="heading-three" icon="looks_3" />
+        <BlockButton format="block-quote" icon="format_quote" />
+        <BlockButton format="numbered-list" icon="format_list_numbered" />
+        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
       </EditorToolbar>
       <EditorPaper
         renderElement={renderElement}
