@@ -24,6 +24,12 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "auto",
     marginRight: 0,
   },
+  title: {
+    margin: 8,
+  },
+  input: {
+    color: "white",
+  },
 }));
 
 const EditorButton = ({ active, icon, format, ...props }) => (
@@ -133,4 +139,32 @@ const EditorToolbar = ({ children }) => {
   );
 };
 
-export { EditorButton, EditorLinkButton, EditorToolbar, EditorPaper, EditorSaveButton };
+const EditorTitle = ({ groupId, setTitle }) => {
+  const classes = useStyles();
+
+  return (
+    <TextField
+      className={classes.title}
+      label="Title"
+      defaultValue={groupId}
+      variant="outlined"
+      size="small"
+      fullWidth
+      color="secondary"
+      error
+      InputProps={{
+        className: classes.input,
+      }}
+      onChange={(e) => (e.target.value ? setTitle(e.target.value) : setTitle(groupId))}
+    />
+  );
+};
+
+export {
+  EditorButton,
+  EditorLinkButton,
+  EditorToolbar,
+  EditorPaper,
+  EditorSaveButton,
+  EditorTitle,
+};

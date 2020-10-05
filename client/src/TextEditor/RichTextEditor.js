@@ -13,6 +13,7 @@ import {
   EditorToolbar,
   EditorPaper,
   EditorSaveButton,
+  EditorTitle,
 } from "./EditorComponents";
 
 const HOTKEYS = {
@@ -31,6 +32,7 @@ function RichTextEditor() {
   const saved = JSON.parse(localStorage.getItem("content"));
   const { groupId } = useParams();
   const [value, setValue] = useState(saved || initialValue);
+  const [title, setTitle] = useState(groupId);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
@@ -79,6 +81,7 @@ function RichTextEditor() {
         ].map(([format, icon]) => (
           <BlockButton format={format} icon={icon} />
         ))}
+        <EditorTitle groupId={groupId} setTitle={setTitle} />
         <EditorSaveButton editor={editor} ENDPOINT={ENDPOINT} />
       </EditorToolbar>
       <EditorPaper
