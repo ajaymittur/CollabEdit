@@ -12,6 +12,7 @@ const User = require("./models/User");
 const Docs = require("./models/Docs");
 const signin = require("./controllers/signin");
 const login = require("./controllers/login");
+const saveDocument = require("./controllers/saveDocument");
 
 const app = express();
 
@@ -58,30 +59,10 @@ app.post("/login", async (req, res) => {
   login.handleLogin(req, res, bcrypt, User, generate);
 });
 
+//Saving a Document
+
 app.post("/savedocs", authenticate.authenticateToken, async (req, res) => {
-  const { message, text, username } = req.body;
-
-  const saveStatus = await User.findOneAndUpdate(
-    { username: req.body.username },
-    {
-      $push: {
-        savedDocs: {
-          message,
-          text,
-        },
-      },
-    },
-    (error, success) => {
-      if (error) {
-        console.log(error);
-        return res.status(500).send("Problem Saving Doc");
-      } else {
-        console.log("Success Saving Doc", success.savedDocs);
-
-        return res.json({ response: success.savedDocs.slice(-1)[0] });
-      }
-    }
-  );
+  saveDocument.handleSaveDocs(req, res, User);
 });
 
 http.listen(process.env.PORT || 4000, () => {
