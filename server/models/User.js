@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
+const autoIncrement = require("mongodb-autoincrement");
 
-// Create Schema
+const Docs = require("./Docs");
+
+// Create UserSchema
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -27,6 +30,9 @@ const UserSchema = mongoose.Schema({
   dob: {
     type: Date,
     required: true,
+  },
+  savedDocs: {
+    type: [Docs],
   },
 });
 
