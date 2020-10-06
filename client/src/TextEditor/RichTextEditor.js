@@ -42,6 +42,7 @@ function RichTextEditor() {
     socket = io(ENDPOINT);
 
     socket.on(`new-value-${groupId}`, (newValue) => {
+      Transforms.deselect(editor);
       setValue(newValue);
     });
 
