@@ -1,7 +1,14 @@
 const mongoose = require("mongoose");
-const autoIncrement = require("mongodb-autoincrement");
+const autoIncrement = require("mongoose-auto-increment");
 
 require("dotenv").config({ path: "../.env" });
+
+const connection = mongoose.createConnection(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+autoIncrement.initialize(connection);
 
 //Create Docs Schema
 const DocsSchema = mongoose.Schema({
@@ -19,7 +26,6 @@ const DocsSchema = mongoose.Schema({
   },
 });
 
-autoIncrement.initialize(mongoose.connection);
 DocsSchema.plugin(autoIncrement.plugin, {
   model: "Docs",
   field: "_id",
@@ -27,4 +33,6 @@ DocsSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1,
 });
 
-module.exports = mongoose.model("Docs", DocsSchema);
+module.exports = {
+  DocsSchema,
+};

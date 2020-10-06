@@ -35,7 +35,7 @@ app.use(cors());
 
 mongoose.connect(
   process.env.MONGO_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
   () => console.log("Connected to DB!")
 );
 mongoose.set("useCreateIndex", true);
@@ -59,19 +59,26 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/savedocs", authenticate.authenticateToken, async (req, res) => {
-  const message = "TITLE";
-  const text =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis a tempor lectus. Fusce nec nisl tempus, elementum metus eget, sollicitudin tortor. Mauris vel mi vulputate, sollicitudin nulla eu, consectetur mauris. Mauris tincidunt sollicitudin facilisis. In sem tellus, volutpat vitae justo ac, congue tincidunt magna. Phasellus molestie ut massa eget tincidunt. Etiam facilisis sodales maximus. Proin at purus et ex feugiat lacinia. Phasellus malesuada velit bibendum felis mollis imperdiet. Nam vulputate quam sit amet laoreet ultrices. Aenean molestie ut ante vel pellentesque. Mauris mi ante, rutrum ultrices tortor nec, finibus elementum felis. In metus mauris, sollicitudin non nunc dignissim, ornare efficitur augue.";
-  const values = { message, text };
+  const { message, text, username } = req.body;
 
-  User.findOneAndUpdate(
+  const saveStatus = await User.findOneAndUpdate(
     { username: req.body.username },
-    { $push: { savedDocs: values } },
-    function (error, success) {
+    {
+      $push: {
+        savedDocs: {
+          message,
+          text,
+        },
+      },
+    },
+    (error, success) => {
       if (error) {
         console.log(error);
+        return res.status(500).send("Problem Saving Doc");
       } else {
-        console.log(success);
+        console.log("Success Saving Doc", success.savedDocs);
+
+        return res.json({ response: success.savedDocs.slice(-1)[0] });
       }
     }
   );
