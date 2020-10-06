@@ -1,7 +1,7 @@
-const handleSignin = async (req, res, bcrypt, User, generate) => {
+const handleSignup = async (req, res, bcrypt, User, generate) => {
   const { name, username, email, dob, password } = req.body;
 
-  if (!username || !password) return res.status(400).json("Incorrect Login");
+  if (!username || !password) return res.status(400).json("Incorrect Signup");
 
   try {
     const hash = await bcrypt.hash(password, 10);
@@ -40,5 +40,5 @@ const handleSignin = async (req, res, bcrypt, User, generate) => {
 };
 
 module.exports = {
-  handleSignin,
+  handleSignup,
 };

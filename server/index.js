@@ -9,8 +9,7 @@ const bcrypt = require("bcryptjs");
 const authenticate = require("./middleware/authenticateToken");
 const generate = require("./controllers/generateToken");
 const User = require("./models/User");
-const Docs = require("./models/Docs");
-const signin = require("./controllers/signin");
+const signin = require("./controllers/signup");
 const login = require("./controllers/login");
 const saveDocument = require("./controllers/saveDocument");
 
@@ -50,7 +49,7 @@ app.get("/", (req, res) => {
 //Sign Up
 
 app.post("/signup", async (req, res) => {
-  signin.handleSignin(req, res, bcrypt, User, generate);
+  signin.handleSignup(req, res, bcrypt, User, generate);
 });
 
 //Log In
