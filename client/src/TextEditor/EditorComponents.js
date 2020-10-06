@@ -139,14 +139,15 @@ const EditorToolbar = ({ children }) => {
   );
 };
 
-const EditorTitle = ({ groupId, setTitle }) => {
+const EditorTitle = ({ groupId, value, handleChange }) => {
   const classes = useStyles();
 
   return (
     <TextField
       className={classes.title}
       label="Title"
-      defaultValue={groupId}
+      value={value === groupId ? "" : value}
+      placeholder={groupId}
       variant="outlined"
       size="small"
       fullWidth
@@ -155,7 +156,7 @@ const EditorTitle = ({ groupId, setTitle }) => {
       InputProps={{
         className: classes.input,
       }}
-      onChange={(e) => (e.target.value ? setTitle(e.target.value) : setTitle(groupId))}
+      onChange={(e) => (e.target.value ? handleChange(e.target.value) : handleChange(groupId))}
     />
   );
 };

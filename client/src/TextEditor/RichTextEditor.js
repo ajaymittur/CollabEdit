@@ -29,10 +29,11 @@ const ENDPOINT = "http://localhost:4000/";
 let socket = undefined;
 
 function RichTextEditor() {
-  const saved = JSON.parse(localStorage.getItem("content"));
+  const savedValue = JSON.parse(localStorage.getItem("content"));
+  const savedTitle = localStorage.getItem("title");
   const { groupId } = useParams();
-  const [value, setValue] = useState(saved || initialValue);
-  const [title, setTitle] = useState(groupId);
+  const [value, setValue] = useState(savedValue || initialValue);
+  const [title, setTitle] = useState(savedTitle || groupId);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
@@ -44,23 +45,34 @@ function RichTextEditor() {
       setValue(newValue);
     });
 
+    socket.on(`new-title-${groupId}`, (newTitle) => {
+      setTitle(newTitle);
+    });
+
     return () => socket.disconnect();
   }, []);
 
   useEffect(() => {
     const autoSave = setTimeout(() => {
       localStorage.setItem("content", JSON.stringify(value));
+      localStorage.setItem("title", title);
     }, 3000);
-    return () => clearTimeout(autoSave);
-  }, [value]);
 
-  const handleChange = (value) => {
+    return () => clearTimeout(autoSave);
+  }, [value, title]);
+
+  const handleValueChange = (value) => {
     setValue(value);
     socket.emit("new-value", groupId, value);
   };
 
+  const handleTitleChange = (title) => {
+    setTitle(title);
+    socket.emit("new-title", groupId, title);
+  };
+
   return (
-    <Slate editor={editor} value={value} onChange={handleChange}>
+    <Slate editor={editor} value={value} onChange={handleValueChange}>
       <EditorToolbar>
         {[
           ["bold", "format_bold"],
@@ -81,7 +93,7 @@ function RichTextEditor() {
         ].map(([format, icon]) => (
           <BlockButton format={format} icon={icon} />
         ))}
-        <EditorTitle groupId={groupId} setTitle={setTitle} />
+        <EditorTitle groupId={groupId} value={title} handleChange={handleTitleChange} />
         <EditorSaveButton editor={editor} ENDPOINT={ENDPOINT} />
       </EditorToolbar>
       <EditorPaper
