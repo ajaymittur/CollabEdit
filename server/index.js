@@ -25,6 +25,10 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(`new-value-${groupId}`, newValue);
   });
 
+  socket.on("new-title", (groupId, newTitle) => {
+    socket.broadcast.emit(`new-title-${groupId}`, newTitle);
+  });
+
   socket.on("disconnect", () => {
     console.log("a user disconnected");
   });
