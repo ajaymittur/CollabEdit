@@ -2,13 +2,13 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-//const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const authenticate = require("./middleware/authenticateToken");
 const generate = require("./controllers/generateToken");
 const User = require("./models/User");
+const Docs = require("./models/Docs");
 const signin = require("./controllers/signup");
 const login = require("./controllers/login");
 const saveDocument = require("./controllers/saveDocument");
@@ -61,7 +61,7 @@ app.post("/login", async (req, res) => {
 //Saving a Document
 
 app.post("/savedocs", authenticate.authenticateToken, async (req, res) => {
-  saveDocument.handleSaveDocs(req, res, User);
+  saveDocument.handleSaveDocs(req, res, User, Docs);
 });
 
 http.listen(process.env.PORT || 4000, () => {

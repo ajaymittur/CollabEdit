@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
-const DocsSchema = require("./Docs");
-
 // Create UserSchema
+
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -30,9 +29,12 @@ const UserSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  savedDocs: {
-    type: [DocsSchema.DocsSchema],
-  },
+  docs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Docs",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", UserSchema);
