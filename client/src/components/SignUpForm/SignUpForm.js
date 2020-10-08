@@ -3,8 +3,6 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -12,12 +10,14 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="#">
         CollabEdit
       </Link>{" "}
       {new Date().getFullYear()}
@@ -64,6 +64,22 @@ export default function SignUpForm() {
   const handlePasswordChange = (event) => setPassword(event.target.value);
   const handleRepasswordChange = (event) => setRepassword(event.target.value);
 
+  function handleSubmit(data) {
+    let error = {};
+    if (password !== repassword) error.pass = "Passwords do not match";
+
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email))
+      error.em = "Enter a valid email address";
+
+    if (!email || !password || !repassword || !name || !username)
+      error.fill = "Make sure you fill in all the fields";
+
+    if (password.length < 8)
+      error.pass = "Password should be atleast 8 characters in length";
+
+    setErrors(error);
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -76,27 +92,16 @@ export default function SignUpForm() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                autoComplete="name"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="name"
+                label="Full Name"
                 autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
               />
             </Grid>
             <Grid item xs={12}>
@@ -158,10 +163,17 @@ export default function SignUpForm() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" variant="body2">
                 Already have an account? Log in
               </Link>
             </Grid>
+            {Object.entries(errors).length > 0 && (
+              <Alert severity="error">
+                <AlertTitle>Error</AlertTitle>
+                There were some errors with your submission
+                {Object.keys(errors).map((key) => errors[key])}
+              </Alert>
+            )}
           </Grid>
         </form>
       </div>
