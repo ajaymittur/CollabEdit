@@ -11,7 +11,7 @@ const User = require("./models/User");
 const Docs = require("./models/Docs");
 const signin = require("./controllers/signup");
 const login = require("./controllers/login");
-const saveDocument = require("./controllers/saveDocument");
+const document = require("./controllers/document");
 
 const app = express();
 
@@ -62,10 +62,18 @@ app.post("/login", async (req, res) => {
   login.handleLogin(req, res, bcrypt, User, generate);
 });
 
-//Saving a Document
+// Document routes
 
-app.post("/savedocs", authenticate.authenticateToken, async (req, res) => {
-  saveDocument.handleSaveDocs(req, res, User, Docs);
+app.get("/docs", authenticate.authenticateToken, async (req, res) => {
+  document.handleGetDocs(req, res, User, Docs);
+});
+
+app.put("/docs/:groupId", authenticate.authenticateToken, async (req, res) => {
+  document.handleSaveDocs(req, res, User, Docs);
+});
+
+app.delete("/docs/:groupId", authenticate.authenticateToken, async (req, res) => {
+  document.handleDeleteDoc(req, res, User, Docs);
 });
 
 http.listen(process.env.PORT || 4000, () => {
