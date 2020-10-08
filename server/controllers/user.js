@@ -30,7 +30,7 @@ const login = async (req, res) => {
   return res.json(response);
 };
 
-const signup = async (req, res, bcrypt, generate) => {
+const signup = async (req, res) => {
   const { name, username, email, dob, password } = req.body;
 
   if (!username || !password) return res.status(400).json("Incorrect Signup");
