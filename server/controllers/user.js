@@ -7,7 +7,7 @@ const generateToken = (username) => {
   return jwt.sign({ username }, process.env.ACCESS_TOKEN_SECRET);
 };
 
-const handleLogin = async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json("Incorrect Login");
 
@@ -30,7 +30,7 @@ const handleLogin = async (req, res) => {
   return res.json(response);
 };
 
-const handleSignup = async (req, res) => {
+const signup = async (req, res) => {
   const { name, username, email, dob, password } = req.body;
 
   if (!username || !password) return res.status(400).json("Incorrect Signup");
@@ -72,6 +72,6 @@ const handleSignup = async (req, res) => {
 };
 
 module.exports = {
-  handleLogin,
-  handleSignup,
+  login,
+  signup,
 };
