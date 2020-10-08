@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-// Create Schema
+// Create UserSchema
+
 const UserSchema = mongoose.Schema({
   name: {
     type: String,
@@ -28,6 +29,12 @@ const UserSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  docs: [
+    {
+      type: String,
+      ref: "Docs",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", UserSchema);

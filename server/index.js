@@ -2,15 +2,12 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-//const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 
 const authenticate = require("./middleware/authenticateToken");
-const generate = require("./controllers/generateToken");
-const User = require("./models/User");
-const signin = require("./controllers/signin");
-const login = require("./controllers/login");
+
+const userController = require("./controllers/user");
+const documentController = require("./controllers/document");
 
 const app = express();
 
@@ -38,28 +35,31 @@ app.use(cors());
 
 mongoose.connect(
   process.env.MONGO_URI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
   () => console.log("Connected to DB!")
 );
 mongoose.set("useCreateIndex", true);
 
-//ROUTES
+// ROUTES
 
 app.get("/", (req, res) => {
   console.log("Home!");
 });
 
 //Sign Up
-
-app.post("/signup", async (req, res) => {
-  signin.handleSignin(req, res, bcrypt, User, generate);
-});
+app.post("/signup", userController.handleSignup);
 
 //Log In
+app.post("/login", userController.handleLogin);
 
-app.post("/login", async (req, res) => {
-  login.handleLogin(req, res, bcrypt, User, generate);
-});
+// Get Docs
+app.get("/docs", authenticate.authenticateToken, documentController.handleGetDocs);
+
+// Create/Update Doc
+app.put("/docs/:groupId", authenticate.authenticateToken, documentController.handleSaveDocs);
+
+// Delete Doc
+app.delete("/docs/:groupId", authenticate.authenticateToken, documentController.handleDeleteDoc);
 
 http.listen(process.env.PORT || 4000, () => {
   console.log("Listening on Port 4000");
