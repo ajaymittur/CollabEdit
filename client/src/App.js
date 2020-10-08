@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
+import NotFound from "./components/NotFound/NotFound";
 import RichTextEditor from "./components/TextEditor/RichTextEditor";
 
 function App() {
@@ -26,15 +27,11 @@ function App() {
         </Route>
         <Route path="/groups/:groupId" children={<RichTextEditor />} />
         <Route>
-          <NoMatch />
+          <NotFound />
         </Route>
       </Switch>
     </Router>
   );
 }
-
-const NoMatch = () => {
-  return <h1>404</h1>;
-};
 
 export default App;
