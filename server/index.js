@@ -53,6 +53,9 @@ app.post("/login", userController.login);
 // Get Docs
 app.get("/docs", auth.authenticateToken, documentController.getDocs);
 
+// Get Single Docs
+app.get("/docs/:groupId", auth.authenticateToken, documentController.getSingleDoc);
+
 // Create/Update Doc
 app.put("/docs/:groupId", auth.authenticateToken, documentController.saveDocs);
 

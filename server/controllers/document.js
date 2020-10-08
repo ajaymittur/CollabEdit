@@ -19,6 +19,7 @@ const saveDocs = async (req, res) => {
       return res.status(400).send("User doesn't have perms to save doc");
 
     modifiedDoc.value = value;
+    modifiedDoc.title = title;
     await modifiedDoc.save();
 
     res.send(`Document ${groupId} updated`);
@@ -31,6 +32,14 @@ const saveDocs = async (req, res) => {
 
     res.send(`Document ${groupId} saved`);
   }
+};
+
+const getSingleDoc = async (req, res) => {
+  const { groupId } = req.params;
+
+  const doc = await Docs.findById(groupId);
+
+  res.json(doc);
 };
 
 const getDocs = async (req, res) => {
@@ -123,6 +132,7 @@ const getEditors = async (req, res) => {
 module.exports = {
   saveDocs,
   getDocs,
+  getSingleDoc,
   deleteDoc,
   addEditor,
   removeEditor,
