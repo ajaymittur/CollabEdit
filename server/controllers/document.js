@@ -14,8 +14,11 @@ const saveDocs = async (req, res) => {
 
   try {
     const modifiedDoc = await Docs.findById(groupId);
-    modifiedDoc.value = value;
 
+    if (!modifiedDoc.owner.equals(userId) && !modifiedDoc.editors.includes(userId))
+      return res.status(400).send("User doesn't have perms to save doc");
+
+    modifiedDoc.value = value;
     await modifiedDoc.save();
 
     res.send(`Document ${groupId} updated`);
