@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-//import LoginForm from "./components/LoginForm/LoginForm";
+import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
 import RichTextEditor from "./components/TextEditor/RichTextEditor";
 
@@ -18,9 +18,9 @@ function App() {
         <Route exact path="/">
           <Redirect to={`/groups/${uuidv4()}`} />
         </Route>
-        {/* <Route path="/login">
+        <Route path="/login">
           <LoginForm />
-        </Route> */}
+        </Route>
         <Route path="/signup">
           <SignUpForm />
         </Route>
