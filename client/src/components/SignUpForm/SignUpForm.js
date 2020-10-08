@@ -12,6 +12,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 function Copyright() {
   return (
@@ -65,6 +66,7 @@ export default function SignUpForm() {
   const handleRepasswordChange = (event) => setRepassword(event.target.value);
 
   function handleSubmit(data) {
+    console.log(email);
     let error = {};
     if (password !== repassword) error.pass = "Passwords do not match";
 
@@ -101,6 +103,7 @@ export default function SignUpForm() {
                 fullWidth
                 id="name"
                 label="Full Name"
+                onChange={handleNameChange}
                 autoFocus
               />
             </Grid>
@@ -113,6 +116,7 @@ export default function SignUpForm() {
                 fullWidth
                 id="userName"
                 label="Username"
+                onChange={handleUsernameChange}
                 autoFocus
               />
             </Grid>
@@ -125,6 +129,8 @@ export default function SignUpForm() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={handleEmailChange}
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -137,6 +143,7 @@ export default function SignUpForm() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handlePasswordChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -149,15 +156,18 @@ export default function SignUpForm() {
                 type="password"
                 id="repassword"
                 autoComplete="current-password"
+                onChange={handleRepasswordChange}
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            //type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            endIcon={<ExitToAppIcon />}
+            onClick={handleSubmit}
           >
             Sign Up
           </Button>
@@ -170,8 +180,13 @@ export default function SignUpForm() {
             {Object.entries(errors).length > 0 && (
               <Alert severity="error">
                 <AlertTitle>Error</AlertTitle>
-                There were some errors with your submission
-                {Object.keys(errors).map((key) => errors[key])}
+                There were some errors with your submission <br></br>
+                <strong>
+                  {Object.keys(errors).map(
+                    (key, index) => `${index + 1}) ` + errors[key] + " "
+                  )}
+                  <br></br>
+                </strong>
               </Alert>
             )}
           </Grid>
