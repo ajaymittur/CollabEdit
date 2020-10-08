@@ -1,4 +1,7 @@
-const handleSaveDocs = async (req, res, User, Docs) => {
+const User = require("../models/User");
+const Docs = require("../models/Docs");
+
+const handleSaveDocs = async (req, res) => {
   const {
     user: { username },
     value,
@@ -26,7 +29,7 @@ const handleSaveDocs = async (req, res, User, Docs) => {
   }
 };
 
-const handleGetDocs = async (req, res, User, Docs) => {
+const handleGetDocs = async (req, res) => {
   const {
     user: { username },
   } = req.body;
@@ -37,7 +40,7 @@ const handleGetDocs = async (req, res, User, Docs) => {
   res.json(docs);
 };
 
-const handleDeleteDoc = async (req, res, User, Docs) => {
+const handleDeleteDoc = async (req, res) => {
   const {
     user: { username },
   } = req.body;
