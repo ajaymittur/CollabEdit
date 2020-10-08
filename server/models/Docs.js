@@ -7,6 +7,10 @@ const DocsSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  title: {
+    type: String,
+    required: true,
+  },
   value: {
     type: Object,
     required: true,
@@ -15,7 +19,12 @@ const DocsSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  // editors: {} if we plan on adding controlled edit feature
+  editors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   created_on: {
     type: Date,
     default: Date.now,
