@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { Editable } from "slate-react";
 import Button from "@material-ui/core/Button";
 import Icon from "@material-ui/core/Icon";
@@ -11,6 +12,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -38,14 +40,35 @@ const EditorButton = ({ active, icon, format, ...props }) => (
   </Button>
 );
 
-const EditorSaveButton = ({ editor, ENDPOINT }) => {
+const EditorSaveButton = ({ title, value, ENDPOINT }) => {
+  const [saving, setSaving] = React.useState(false);
   const classes = useStyles();
 
-  return (
-    <Button color="inherit" startIcon={<Icon>save</Icon>} className={classes.saveButton}>
-      Save
-    </Button>
-  );
+  const handleSave = async () => {
+    setSaving(true);
+    const token = localStorage.getItem("token");
+    await axios.put(
+      ENDPOINT,
+      {
+        title,
+        value,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    setSaving(false);
+  };
+
+  if (saving) return <CircularProgress color="secondary" />;
+  else
+    return (
+      <Button
+        color="inherit"
+        startIcon={<Icon>save</Icon>}
+        onClick={handleSave}
+        className={classes.saveButton}>
+        Save
+      </Button>
+    );
 };
 
 const EditorLinkButton = ({ active, editor, toggleLink, icon }) => {

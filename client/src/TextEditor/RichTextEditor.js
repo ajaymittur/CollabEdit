@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import io from "socket.io-client";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
@@ -50,6 +51,23 @@ function RichTextEditor() {
       setTitle(newTitle);
     });
 
+    async function fetchData() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${ENDPOINT}docs/${groupId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        console.log(response);
+        if (response) {
+          setValue(response.data.value);
+          setTitle(response.data.title);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchData();
+
     return () => socket.disconnect();
   }, []);
 
@@ -95,7 +113,7 @@ function RichTextEditor() {
           <BlockButton format={format} icon={icon} />
         ))}
         <EditorTitle groupId={groupId} value={title} handleChange={handleTitleChange} />
-        <EditorSaveButton editor={editor} ENDPOINT={ENDPOINT} />
+        <EditorSaveButton title={title} value={value} ENDPOINT={`${ENDPOINT}docs/${groupId}`} />
       </EditorToolbar>
       <EditorPaper
         renderElement={renderElement}
