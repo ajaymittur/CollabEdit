@@ -187,7 +187,7 @@ const EditorTitle = ({ groupId, value, disabled, handleChange }) => {
           disabled: classes.disabled,
         },
       }}
-      disabled
+      disabled={disabled}
       onChange={(e) => (e.target.value ? handleChange(e.target.value) : handleChange(groupId))}
     />
   );
