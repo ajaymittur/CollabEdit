@@ -8,9 +8,7 @@ const authenticateToken = (req, res, next) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
     if (err) return res.status(401).json("Invalid Token");
-    console.log(decoded);
     req.body.username = decoded.username;
-    console.log(req.body);
     next();
   });
 };
