@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EditorButton = ({ active, icon, format, disabled }) => (
-  <Button color={active ? "secondary" : "inherit"} disabled={disabled}>
+const EditorButton = ({ active, icon, disabled, ...props }) => (
+  <Button color={active ? "secondary" : "inherit"} disabled={disabled} {...props}>
     <Icon>{icon}</Icon>
   </Button>
 );

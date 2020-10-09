@@ -65,7 +65,7 @@ function TextEditor() {
 
   const handleAddEditor = async () => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${ENDPOINT}/docs/${groupId}/addEditor`,
         { editor: addEditor },
         {
@@ -81,7 +81,7 @@ function TextEditor() {
   const handleRemoveEditor = async () => {
     try {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
-      const response = await axios({
+      await axios({
         method: "delete",
         url: `${ENDPOINT}/docs/${groupId}/removeEditor`,
         data: {
@@ -99,8 +99,8 @@ function TextEditor() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" startIcon={<ArrowBackIcon />}>
-            <Link to="/dashboard">Back</Link>
+          <Button color="inherit" startIcon={<ArrowBackIcon />} component={Link} to={"/dashboard"}>
+            Back
           </Button>
           <Typography variant="h6" className={classes.title}>
             Username

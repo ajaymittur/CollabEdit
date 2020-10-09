@@ -109,6 +109,7 @@ const getEditors = async (req, res) => {
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
+  if (!doc) return res.status(400).send("No such doc exists");
   const editors = await User.find({ _id: { $in: doc.editors } }, "username");
 
   editors.forEach((val, i) => (editors[i] = editors[i].username));
