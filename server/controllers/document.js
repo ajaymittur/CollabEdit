@@ -15,7 +15,7 @@ const saveDocs = async (req, res) => {
   try {
     const modifiedDoc = await Docs.findById(groupId);
 
-    if (!modifiedDoc.owner.equals(userId) && !modifiedDoc.editors.includes(userId))
+    if (!modifiedDoc.editors.includes(userId))
       return res.status(400).send("User doesn't have perms to save doc");
 
     modifiedDoc.value = value;
@@ -24,7 +24,7 @@ const saveDocs = async (req, res) => {
 
     res.send(`Document ${groupId} updated`);
   } catch (DocumentNotFoundError) {
-    const newDoc = new Docs({ _id: groupId, title, value, owner: userId });
+    const newDoc = new Docs({ _id: groupId, title, value, owner: userId, editors: [userId] });
     user.docs.push(groupId);
 
     await newDoc.save();
@@ -112,6 +112,7 @@ const removeEditor = async (req, res) => {
   const _editor = await User.findOne({ username: editor }, "_id");
   if (!editor) return res.status(400).send(`${editor} doesn't exist`);
   const editorId = _editor._id;
+  if (editorId === userId) return res.status(400).send("Cannot remove owner from editors");
 
   await doc.updateOne({ $pull: { editors: editorId } });
 

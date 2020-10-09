@@ -32,15 +32,18 @@ const useStyles = makeStyles((theme) => ({
   input: {
     color: "white",
   },
+  disabled: {
+    color: "white",
+  },
 }));
 
-const EditorButton = ({ active, icon, format, ...props }) => (
-  <Button color={active ? "secondary" : "inherit"} {...props}>
+const EditorButton = ({ active, icon, format, disabled }) => (
+  <Button color={active ? "secondary" : "inherit"} disabled={disabled}>
     <Icon>{icon}</Icon>
   </Button>
 );
 
-const EditorSaveButton = ({ title, value, ENDPOINT }) => {
+const EditorSaveButton = ({ title, value, ENDPOINT, disabled }) => {
   const [saving, setSaving] = React.useState(false);
   const classes = useStyles();
 
@@ -65,13 +68,14 @@ const EditorSaveButton = ({ title, value, ENDPOINT }) => {
         color="inherit"
         startIcon={<Icon>save</Icon>}
         onClick={handleSave}
-        className={classes.saveButton}>
+        className={classes.saveButton}
+        disabled={disabled}>
         Save
       </Button>
     );
 };
 
-const EditorLinkButton = ({ active, editor, toggleLink, icon }) => {
+const EditorLinkButton = ({ active, editor, toggleLink, icon, disabled }) => {
   const [open, setOpen] = React.useState(false);
   const [url, setUrl] = React.useState();
   const [selection, setSelection] = React.useState();
@@ -92,7 +96,8 @@ const EditorLinkButton = ({ active, editor, toggleLink, icon }) => {
       <Button
         color={active ? "secondary" : "inherit"}
         onMouseDown={() => setSelection(editor.selection)}
-        onClick={() => (active ? toggleLink(editor, url, active) : setOpen(true))}>
+        onClick={() => (active ? toggleLink(editor, url, active) : setOpen(true))}
+        disabled={disabled}>
         <Icon>{icon}</Icon>
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -162,7 +167,7 @@ const EditorToolbar = ({ children }) => {
   );
 };
 
-const EditorTitle = ({ groupId, value, handleChange }) => {
+const EditorTitle = ({ groupId, value, disabled, handleChange }) => {
   const classes = useStyles();
 
   return (
@@ -177,8 +182,12 @@ const EditorTitle = ({ groupId, value, handleChange }) => {
       color="secondary"
       error
       InputProps={{
-        className: classes.input,
+        classes: {
+          root: classes.input,
+          disabled: classes.disabled,
+        },
       }}
+      disabled
       onChange={(e) => (e.target.value ? handleChange(e.target.value) : handleChange(groupId))}
     />
   );
