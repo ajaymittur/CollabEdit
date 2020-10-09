@@ -2,11 +2,7 @@ const User = require("../models/User");
 const Docs = require("../models/Docs");
 
 const saveDocs = async (req, res) => {
-  const {
-    user: { username },
-    title,
-    value,
-  } = req.body;
+  const { username, title, value } = req.body;
   const { groupId } = req.params;
 
   const user = await User.findOne({ username });
@@ -43,9 +39,7 @@ const getSingleDoc = async (req, res) => {
 };
 
 const getDocs = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+  const { username } = req.body;
 
   const user = await User.findOne({ username });
   const docs = await Docs.find({ _id: { $in: user.docs } });
@@ -54,9 +48,7 @@ const getDocs = async (req, res) => {
 };
 
 const deleteDoc = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+  const { username } = req.body;
   const { groupId } = req.params;
 
   Docs.deleteOne({ _id: groupId }, async (err) => {
@@ -73,10 +65,7 @@ const deleteDoc = async (req, res) => {
 };
 
 const addEditor = async (req, res) => {
-  const {
-    editor,
-    user: { username },
-  } = req.body;
+  const { editor, username } = req.body;
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
@@ -98,10 +87,7 @@ const addEditor = async (req, res) => {
 };
 
 const removeEditor = async (req, res) => {
-  const {
-    editor,
-    user: { username },
-  } = req.body;
+  const { editor, username } = req.body;
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
