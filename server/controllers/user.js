@@ -3,8 +3,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
-const generateToken = (username) => {
-  return jwt.sign({ username }, process.env.ACCESS_TOKEN_SECRET);
+const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 };
 
 const login = async (req, res) => {
@@ -59,7 +59,7 @@ const signup = async (req, res) => {
     return res.status(400).json("Invalid Token/Password");
   }
 
-  const token = generateToken(req.body);
+  const token = generateToken(req.body.username);
   console.log("Signed Up!");
   const response = {
     name,

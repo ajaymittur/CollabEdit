@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
-import RichTextEditor from "./TextEditor/RichTextEditor";
+import TextEditor from "./components/TextEditor/TextEditor";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <Route exact path="/">
           <Redirect to={`/groups/${uuidv4()}`} />
         </Route>
-        <Route path="/groups/:groupId" children={<RichTextEditor />} />
+        <Route path="/groups/:groupId" children={<TextEditor />} />
         <Route>
           <NoMatch />
         </Route>

@@ -1,19 +1,20 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import io from "socket.io-client";
+import axios from "axios";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
-import { useParams } from "react-router-dom";
-import { withReact, useSlate, Slate } from "slate-react";
-import { Editor, Transforms, Range, createEditor } from "slate";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { createEditor, Editor, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
+// import { useParams } from "react-router-dom";
+import { Slate, useSlate, withReact } from "slate-react";
+import io from "socket.io-client";
 
 import {
   EditorButton,
   EditorLinkButton,
-  EditorToolbar,
   EditorPaper,
   EditorSaveButton,
   EditorTitle,
+  EditorToolbar,
 } from "./EditorComponents";
 
 const HOTKEYS = {
@@ -24,14 +25,13 @@ const HOTKEYS = {
 };
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
-const ENDPOINT = "http://localhost:4000/";
+const ENDPOINT = "http://localhost:4000";
 
 let socket = undefined;
 
-function RichTextEditor() {
+function RichTextEditor({ groupId, readOnly }) {
   const savedValue = JSON.parse(localStorage.getItem("content"));
   const savedTitle = localStorage.getItem("title");
-  const { groupId } = useParams();
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
   const renderElement = useCallback((props) => <Element {...props} />, []);
@@ -50,7 +50,27 @@ function RichTextEditor() {
       setTitle(newTitle);
     });
 
-    return () => socket.disconnect();
+    async function fetchData() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${ENDPOINT}/docs/${groupId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (response) {
+          setValue(response.data.value);
+          setTitle(response.data.title);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchData();
+
+    return () => {
+      localStorage.removeItem("title");
+      localStorage.removeItem("content");
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -81,9 +101,9 @@ function RichTextEditor() {
           ["underline", "format_underlined"],
           ["code", "code"],
         ].map(([format, icon]) => (
-          <MarkButton format={format} icon={icon} />
+          <MarkButton format={format} icon={icon} disabled={readOnly} />
         ))}
-        <LinkButton format="link" icon="link" />
+        <LinkButton format="link" icon="link" disabled={readOnly} />
         {[
           ["heading-one", "looks_one"],
           ["heading-two", "looks_two"],
@@ -92,10 +112,20 @@ function RichTextEditor() {
           ["numbered-list", "format_list_numbered"],
           ["bulleted-list", "format_list_bulleted"],
         ].map(([format, icon]) => (
-          <BlockButton format={format} icon={icon} />
+          <BlockButton format={format} icon={icon} disabled={readOnly} />
         ))}
-        <EditorTitle groupId={groupId} value={title} handleChange={handleTitleChange} />
-        <EditorSaveButton editor={editor} ENDPOINT={ENDPOINT} />
+        <EditorTitle
+          groupId={groupId}
+          value={title}
+          disabled={readOnly}
+          handleChange={handleTitleChange}
+        />
+        <EditorSaveButton
+          title={title}
+          value={value}
+          ENDPOINT={`${ENDPOINT}/docs/${groupId}`}
+          disabled={readOnly}
+        />
       </EditorToolbar>
       <EditorPaper
         renderElement={renderElement}
@@ -103,6 +133,7 @@ function RichTextEditor() {
         placeholder="Start writing..."
         spellCheck
         autoFocus
+        readOnly={readOnly}
         onKeyDown={(event) => {
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
@@ -269,7 +300,7 @@ const Leaf = ({ attributes, children, leaf }) => {
   return <span {...attributes}>{children}</span>;
 };
 
-const BlockButton = ({ format, icon }) => {
+const BlockButton = ({ format, icon, disabled }) => {
   const editor = useSlate();
   return (
     <EditorButton
@@ -279,11 +310,12 @@ const BlockButton = ({ format, icon }) => {
         toggleBlock(editor, format);
       }}
       icon={icon}
+      disabled={disabled}
     />
   );
 };
 
-const LinkButton = ({ format, icon }) => {
+const LinkButton = ({ format, icon, disabled }) => {
   const editor = useSlate();
   return (
     <EditorLinkButton
@@ -291,11 +323,12 @@ const LinkButton = ({ format, icon }) => {
       editor={editor}
       toggleLink={toggleLink}
       icon={icon}
+      disabled={disabled}
     />
   );
 };
 
-const MarkButton = ({ format, icon }) => {
+const MarkButton = ({ format, icon, disabled }) => {
   const editor = useSlate();
   return (
     <EditorButton
@@ -305,6 +338,7 @@ const MarkButton = ({ format, icon }) => {
         toggleMark(editor, format);
       }}
       icon={icon}
+      disabled={disabled}
     />
   );
 };

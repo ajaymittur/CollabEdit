@@ -2,11 +2,7 @@ const User = require("../models/User");
 const Docs = require("../models/Docs");
 
 const saveDocs = async (req, res) => {
-  const {
-    user: { username },
-    title,
-    value,
-  } = req.body;
+  const { username, title, value } = req.body;
   const { groupId } = req.params;
 
   const user = await User.findOne({ username });
@@ -15,7 +11,7 @@ const saveDocs = async (req, res) => {
   try {
     const modifiedDoc = await Docs.findById(groupId);
 
-    if (!modifiedDoc.owner.equals(userId) && !modifiedDoc.editors.includes(userId))
+    if (!modifiedDoc.editors.includes(userId))
       return res.status(400).send("User doesn't have perms to save doc");
 
     modifiedDoc.value = value;
@@ -24,7 +20,7 @@ const saveDocs = async (req, res) => {
 
     res.send(`Document ${groupId} updated`);
   } catch (DocumentNotFoundError) {
-    const newDoc = new Docs({ _id: groupId, title, value, owner: userId });
+    const newDoc = new Docs({ _id: groupId, title, value, owner: userId, editors: [userId] });
     user.docs.push(groupId);
 
     await newDoc.save();
@@ -43,9 +39,7 @@ const getSingleDoc = async (req, res) => {
 };
 
 const getDocs = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+  const { username } = req.body;
 
   const user = await User.findOne({ username });
   const docs = await Docs.find({ _id: { $in: user.docs } });
@@ -54,9 +48,7 @@ const getDocs = async (req, res) => {
 };
 
 const deleteDoc = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+  const { username } = req.body;
   const { groupId } = req.params;
 
   Docs.deleteOne({ _id: groupId }, async (err) => {
@@ -73,10 +65,7 @@ const deleteDoc = async (req, res) => {
 };
 
 const addEditor = async (req, res) => {
-  const {
-    editor,
-    user: { username },
-  } = req.body;
+  const { editor, username } = req.body;
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
@@ -98,10 +87,7 @@ const addEditor = async (req, res) => {
 };
 
 const removeEditor = async (req, res) => {
-  const {
-    editor,
-    user: { username },
-  } = req.body;
+  const { editor, username } = req.body;
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
@@ -112,6 +98,7 @@ const removeEditor = async (req, res) => {
   const _editor = await User.findOne({ username: editor }, "_id");
   if (!editor) return res.status(400).send(`${editor} doesn't exist`);
   const editorId = _editor._id;
+  if (editorId === userId) return res.status(400).send("Cannot remove owner from editors");
 
   await doc.updateOne({ $pull: { editors: editorId } });
 
@@ -122,6 +109,7 @@ const getEditors = async (req, res) => {
   const { groupId } = req.params;
 
   const doc = await Docs.findById(groupId);
+  if (!doc) return res.status(400).send("No such doc exists");
   const editors = await User.find({ _id: { $in: doc.editors } }, "username");
 
   editors.forEach((val, i) => (editors[i] = editors[i].username));
