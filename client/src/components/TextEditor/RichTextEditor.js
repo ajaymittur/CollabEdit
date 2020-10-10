@@ -4,7 +4,6 @@ import isUrl from "is-url";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { createEditor, Editor, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
-// import { useParams } from "react-router-dom";
 import { Slate, useSlate, withReact } from "slate-react";
 import io from "socket.io-client";
 
