@@ -3,11 +3,11 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
-const generateToken = (username) => {
-  return jwt.sign({ username }, process.env.ACCESS_TOKEN_SECRET);
+const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 };
 
-const handleLogin = async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json("Incorrect Login");
 
@@ -30,7 +30,7 @@ const handleLogin = async (req, res) => {
   return res.json(response);
 };
 
-const handleSignup = async (req, res) => {
+const signup = async (req, res) => {
   const { name, username, email, dob, password } = req.body;
 
   if (!username || !password) return res.status(400).json("Incorrect Signup");
@@ -59,7 +59,7 @@ const handleSignup = async (req, res) => {
     return res.status(400).json("Invalid Token/Password");
   }
 
-  const token = generateToken(req.body);
+  const token = generateToken(req.body.username);
   console.log("Signed Up!");
   const response = {
     name,
@@ -72,6 +72,6 @@ const handleSignup = async (req, res) => {
 };
 
 module.exports = {
-  handleLogin,
-  handleSignup,
+  login,
+  signup,
 };

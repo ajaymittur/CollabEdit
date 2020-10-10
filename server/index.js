@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const authenticate = require("./middleware/authenticateToken");
+const auth = require("./middleware/authenticateToken");
 
 const userController = require("./controllers/user");
 const documentController = require("./controllers/document");
@@ -40,26 +40,36 @@ mongoose.connect(
 );
 mongoose.set("useCreateIndex", true);
 
-// ROUTES
-
-app.get("/", (req, res) => {
-  console.log("Home!");
-});
+// -------------Users---------------
 
 //Sign Up
-app.post("/signup", userController.handleSignup);
+app.post("/signup", userController.signup);
 
 //Log In
-app.post("/login", userController.handleLogin);
+app.post("/login", userController.login);
+
+// --------------Docs---------------
 
 // Get Docs
-app.get("/docs", authenticate.authenticateToken, documentController.handleGetDocs);
+app.get("/docs", auth.authenticateToken, documentController.getDocs);
+
+// Get Single Docs
+app.get("/docs/:groupId", auth.authenticateToken, documentController.getSingleDoc);
 
 // Create/Update Doc
-app.put("/docs/:groupId", authenticate.authenticateToken, documentController.handleSaveDocs);
+app.put("/docs/:groupId", auth.authenticateToken, documentController.saveDocs);
 
 // Delete Doc
-app.delete("/docs/:groupId", authenticate.authenticateToken, documentController.handleDeleteDoc);
+app.delete("/docs/:groupId", auth.authenticateToken, documentController.deleteDoc);
+
+// Add Editor
+app.post("/docs/:groupId/addEditor", auth.authenticateToken, documentController.addEditor);
+
+// Remove Editor
+app.delete("/docs/:groupId/removeEditor", auth.authenticateToken, documentController.removeEditor);
+
+// Get Editors
+app.get("/docs/:groupId/editors", auth.authenticateToken, documentController.getEditors);
 
 http.listen(process.env.PORT || 4000, () => {
   console.log("Listening on Port 4000");
