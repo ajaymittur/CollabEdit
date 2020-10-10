@@ -1,11 +1,8 @@
 const User = require("../models/User");
 const Docs = require("../models/Docs");
 
-const handleSaveDocs = async (req, res) => {
-  const {
-    user: { username },
-    value,
-  } = req.body;
+const saveDocs = async (req, res) => {
+  const { username, title, value } = req.body;
   const { groupId } = req.params;
 
   const user = await User.findOne({ username });
@@ -13,13 +10,17 @@ const handleSaveDocs = async (req, res) => {
 
   try {
     const modifiedDoc = await Docs.findById(groupId);
-    modifiedDoc.value = value;
 
+    if (!modifiedDoc.editors.includes(userId))
+      return res.status(400).send("User doesn't have perms to save doc");
+
+    modifiedDoc.value = value;
+    modifiedDoc.title = title;
     await modifiedDoc.save();
 
     res.send(`Document ${groupId} updated`);
   } catch (DocumentNotFoundError) {
-    const newDoc = new Docs({ _id: groupId, value, owner: userId });
+    const newDoc = new Docs({ _id: groupId, title, value, owner: userId, editors: [userId] });
     user.docs.push(groupId);
 
     await newDoc.save();
@@ -29,10 +30,16 @@ const handleSaveDocs = async (req, res) => {
   }
 };
 
-const handleGetDocs = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+const getSingleDoc = async (req, res) => {
+  const { groupId } = req.params;
+
+  const doc = await Docs.findById(groupId);
+
+  res.json(doc);
+};
+
+const getDocs = async (req, res) => {
+  const { username } = req.body;
 
   const user = await User.findOne({ username });
   const docs = await Docs.find({ _id: { $in: user.docs } });
@@ -40,28 +47,82 @@ const handleGetDocs = async (req, res) => {
   res.json(docs);
 };
 
-const handleDeleteDoc = async (req, res) => {
-  const {
-    user: { username },
-  } = req.body;
+const deleteDoc = async (req, res) => {
+  const { username } = req.body;
   const { groupId } = req.params;
-
-  const user = await User.findOne({ username });
 
   Docs.deleteOne({ _id: groupId }, async (err) => {
     if (err) res.status(500).json(err);
 
-    const index = user.docs.indexOf(groupId);
-    if (index > -1) user.docs.splice(index, 1);
-
-    await user.save();
+    const user = await User.findOneAndUpdate(
+      { username },
+      { $pull: { docs: groupId } },
+      { new: true }
+    );
 
     res.json(user.docs);
   });
 };
 
+const addEditor = async (req, res) => {
+  const { editor, username } = req.body;
+  const { groupId } = req.params;
+
+  const doc = await Docs.findById(groupId);
+  const user = await User.findOne({ username }, "_id");
+  const userId = user._id;
+  if (!doc.owner.equals(userId)) return res.status(401).send("User doesn't own this doc");
+
+  const _editor = await User.findOne({ username: editor }, "_id");
+  if (!editor) return res.status(400).send(`${editor} doesn't exist`);
+  const editorId = _editor._id;
+
+  if (doc.editors.indexOf(editorId) > -1)
+    return res.status(200).send(`${editor} is already an editor`);
+
+  doc.editors.push(editorId);
+  await doc.save();
+
+  res.status(200).send(`${editor} made an editor`);
+};
+
+const removeEditor = async (req, res) => {
+  const { editor, username } = req.body;
+  const { groupId } = req.params;
+
+  const doc = await Docs.findById(groupId);
+  const user = await User.findOne({ username });
+  const userId = user._id;
+  if (!doc.owner.equals(userId)) return res.status(401).send("User doesn't own this doc");
+
+  const _editor = await User.findOne({ username: editor }, "_id");
+  if (!editor) return res.status(400).send(`${editor} doesn't exist`);
+  const editorId = _editor._id;
+  if (editorId === userId) return res.status(400).send("Cannot remove owner from editors");
+
+  await doc.updateOne({ $pull: { editors: editorId } });
+
+  res.send(`Removed ${editor}`);
+};
+
+const getEditors = async (req, res) => {
+  const { groupId } = req.params;
+
+  const doc = await Docs.findById(groupId);
+  if (!doc) return res.status(400).send("No such doc exists");
+  const editors = await User.find({ _id: { $in: doc.editors } }, "username");
+
+  editors.forEach((val, i) => (editors[i] = editors[i].username));
+
+  res.json(editors);
+};
+
 module.exports = {
-  handleSaveDocs,
-  handleGetDocs,
-  handleDeleteDoc,
+  saveDocs,
+  getDocs,
+  getSingleDoc,
+  deleteDoc,
+  addEditor,
+  removeEditor,
+  getEditors,
 };
