@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
+import { ProtectedRoute } from "./auth/ProtectedRoute";
 import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
 import NotFound from "./components/NotFound/NotFound";
@@ -25,7 +26,9 @@ function App() {
         <Route path="/signup">
           <SignUpForm />
         </Route>
-        <Route path="/groups/:groupId" children={<TextEditor />} />
+        <Route path="/groups/:groupId">
+          <TextEditor />
+        </Route>
         <Route>
           <NotFound />
         </Route>
