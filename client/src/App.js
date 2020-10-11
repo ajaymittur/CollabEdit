@@ -1,16 +1,12 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
 import NotFound from "./components/NotFound/NotFound";
 import TextEditor from "./components/TextEditor/TextEditor";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -25,7 +21,12 @@ function App() {
         <Route path="/signup">
           <SignUpForm />
         </Route>
-        <Route path="/groups/:groupId" children={<TextEditor />} />
+        <Route path="/dashboard">
+          <Dashboard />
+        </Route>
+        <Route path="/groups/:groupId">
+          <TextEditor />
+        </Route>
         <Route>
           <NotFound />
         </Route>
