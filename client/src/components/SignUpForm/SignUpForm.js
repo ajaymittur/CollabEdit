@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, useHistory } from "react-router-dom";
 import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -53,6 +53,8 @@ const useStyles = makeStyles((theme) => ({
 function SignUpForm(props) {
   const classes = useStyles();
 
+  let history = useHistory();
+
   const [errors, setErrors] = useState({});
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -96,7 +98,7 @@ function SignUpForm(props) {
           console.log(res);
           localStorage.setItem("token", res.data.token);
 
-          props.history.push({
+          history.push({
             pathname: "/dashboard", //Enter dashboard route here
           });
         })
