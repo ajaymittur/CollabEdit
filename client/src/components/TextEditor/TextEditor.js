@@ -21,12 +21,6 @@ import RichTextEditor from "./RichTextEditor";
 const ENDPOINT = "http://localhost:4000";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   title: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -103,6 +97,7 @@ function TextEditor() {
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
+            {/* TODO: Change this after @akshaymittur is done with user login  */}
             Username
           </Typography>
           <Button

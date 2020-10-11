@@ -42,7 +42,7 @@ const getDocs = async (req, res) => {
   const { username } = req.body;
 
   const user = await User.findOne({ username });
-  const docs = await Docs.find({ _id: { $in: user.docs } });
+  const docs = await Docs.find({ _id: { $in: user.docs } }, "title created_on");
 
   res.json(docs);
 };
