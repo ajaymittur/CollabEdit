@@ -31,7 +31,7 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  const { name, username, email, dob, password } = req.body;
+  const { name, username, email, password } = req.body;
 
   if (!username || !password) return res.status(400).json("Incorrect Signup");
 
@@ -43,7 +43,6 @@ const signup = async (req, res) => {
       email,
       username,
       password: hash,
-      dob,
     });
 
     try {
@@ -65,7 +64,6 @@ const signup = async (req, res) => {
     name,
     email,
     username,
-    dob,
     token,
   };
   return res.json(response);
