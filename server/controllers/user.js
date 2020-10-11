@@ -65,6 +65,7 @@ const signup = async (req, res) => {
     email,
     username,
     token,
+    message: "Success",
   };
   return res.json(response);
 };
