@@ -97,10 +97,10 @@ function LoginForm(props) {
         .then((res) => {
           console.log(res);
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("username", res.data.username);
 
           props.history.push({
             pathname: "/dashboard", //Enter dashboard route here
+            state: { username: response.data.username },
           });
         })
         .catch((error) => {
