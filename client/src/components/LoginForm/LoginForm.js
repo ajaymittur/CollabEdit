@@ -100,7 +100,7 @@ function LoginForm(props) {
 
           props.history.push({
             pathname: "/dashboard", //Enter dashboard route here
-            state: { username: response.data.username },
+            state: { username: res.data.username },
           });
         })
         .catch((error) => {
