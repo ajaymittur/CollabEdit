@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUpForm(props) {
+function SignUpForm(props) {
   const classes = useStyles();
 
   const [errors, setErrors] = useState({});
@@ -68,7 +69,6 @@ export default function SignUpForm(props) {
   const handleRepasswordChange = (event) => setRepassword(event.target.value);
 
   function handleSubmit(data) {
-    console.log(email);
     let error = {};
     if (password !== repassword) error.pass = "Passwords do not match";
 
@@ -100,11 +100,8 @@ export default function SignUpForm(props) {
           });
         })
         .catch((error) => {
-          console.log(error);
-
-          setErrors({ invalid: "Unable to Create Account" });
-          if (error.response.status === 400)
-            setErrors({ redundant: "Email and Username Already in Use" });
+          console.log(error.response);
+          setErrors({ invalid: error.response.data });
         });
     }
   }
@@ -114,7 +111,7 @@ export default function SignUpForm(props) {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockTwoToneIcon color="red" />
+          <LockTwoToneIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -224,3 +221,5 @@ export default function SignUpForm(props) {
     </Container>
   );
 }
+
+export default withRouter(SignUpForm);
