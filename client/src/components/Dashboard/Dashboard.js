@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -17,6 +17,7 @@ import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FolderSharedIcon from "@material-ui/icons/FolderShared";
+import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 
 const drawerWidth = 240;
 
@@ -79,10 +80,11 @@ const useStyles = makeStyles((theme) => ({
 
 function Dashboard() {
   const classes = useStyles();
+  const listClasses = useJupiterListItemStyles();
   const [open, setOpen] = useState(false);
   const [drawerStyles, setDrawerStyles] = useState(classes.drawer + " " + classes.drawerClose);
   const [paperStyles, setPaperStyles] = useState(classes.drawerClose);
-  const [value, setValue] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     if (open) {
@@ -125,15 +127,23 @@ function Dashboard() {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          <ListItem button color="secondary">
+          <ListItem
+            classes={listClasses}
+            button
+            selected={selectedIndex === 0}
+            onClick={(e) => setSelectedIndex(0)}>
             <ListItemIcon>
-              <DescriptionIcon />
+              <DescriptionIcon color={selectedIndex === 0 ? "primary" : "inherit"} />
             </ListItemIcon>
             <ListItemText primary="My Docs" />
           </ListItem>
-          <ListItem button>
+          <ListItem
+            classes={listClasses}
+            button
+            selected={selectedIndex === 1}
+            onClick={(e) => setSelectedIndex(1)}>
             <ListItemIcon>
-              <FolderSharedIcon />
+              <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
             </ListItemIcon>
             <ListItemText primary="Shared With Me" />
           </ListItem>
