@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { withRouter } from "react-router-dom";
+import axios from "axios";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +15,7 @@ import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 import AlertTitle from "@material-ui/lab/AlertTitle";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { SIGNUP } from "../../routes/routes";
 
 function Copyright() {
   return (
@@ -47,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUpForm() {
+function SignUpForm(props) {
   const classes = useStyles();
 
   const [errors, setErrors] = useState({});
@@ -66,7 +69,6 @@ export default function SignUpForm() {
   const handleRepasswordChange = (event) => setRepassword(event.target.value);
 
   function handleSubmit(data) {
-    console.log(email);
     let error = {};
     if (password !== repassword) error.pass = "Passwords do not match";
 
@@ -80,6 +82,29 @@ export default function SignUpForm() {
       error.pass = "Password should be atleast 8 characters in length";
 
     setErrors(error);
+
+    if (Object.keys(error).length === 0) {
+      axios
+        .post(SIGNUP, {
+          name,
+          username,
+          password,
+          email,
+          name,
+        })
+        .then((res) => {
+          console.log(res);
+          localStorage.setItem("token", res.data.token);
+
+          props.history.push({
+            pathname: "/dashboard", //Enter dashboard route here
+          });
+        })
+        .catch((error) => {
+          console.log(error.response);
+          setErrors({ invalid: error.response.data });
+        });
+    }
   }
 
   return (
@@ -87,7 +112,7 @@ export default function SignUpForm() {
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockTwoToneIcon color="red" />
+          <LockTwoToneIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign up
@@ -197,3 +222,5 @@ export default function SignUpForm() {
     </Container>
   );
 }
+
+export default withRouter(SignUpForm);

@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
+import { ProtectedRoute } from "./auth/ProtectedRoute";
 import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
 import NotFound from "./components/NotFound/NotFound";
@@ -20,9 +21,6 @@ function App() {
         </Route>
         <Route path="/signup">
           <SignUpForm />
-        </Route>
-        <Route path="/dashboard">
-          <Dashboard />
         </Route>
         <Route path="/groups/:groupId">
           <TextEditor />
