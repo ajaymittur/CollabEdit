@@ -15,6 +15,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import Alert from "@material-ui/lab/Alert";
 
 import RichTextEditor from "./RichTextEditor";
 import { ENDPOINT } from "../../routes/routes";
@@ -38,6 +39,7 @@ function TextEditor() {
   const [openRemove, setOpenRemove] = useState(false);
   const [addEditor, setAddEditor] = useState();
   const [removeEditor, setRemoveEditor] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -58,17 +60,19 @@ function TextEditor() {
 
   const handleAddEditor = async () => {
     try {
-      await axios.put(
+      await axios.post(
         `${ENDPOINT}/docs/${groupId}/addEditor`,
         { editor: addEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      setError(null);
+      setOpenAdd(false);
     } catch (err) {
       console.error(err);
+      setError(err.response.data);
     }
-    setOpenAdd(false);
   };
 
   const handleRemoveEditor = async () => {
@@ -82,10 +86,12 @@ function TextEditor() {
         },
         headers: { Authorization: `Bearer ${token}` },
       });
+      setError(null);
+      setOpenRemove(false);
     } catch (err) {
       console.error(err);
+      setError(err.response.data);
     }
-    setOpenRemove(false);
   };
 
   return (
@@ -108,7 +114,12 @@ function TextEditor() {
             disabled={readOnly}>
             Editor
           </Button>
-          <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
+          <Dialog
+            open={openAdd}
+            onClose={() => {
+              setError(null);
+              setOpenAdd(false);
+            }}>
             <DialogTitle>Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -121,9 +132,15 @@ function TextEditor() {
                 onChange={(e) => setAddEditor(e.target.value)}
                 fullWidth
               />
+              {error && <Alert severity="error">{error}</Alert>}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenAdd(false)} color="primary">
+              <Button
+                onClick={() => {
+                  setError(null);
+                  setOpenAdd(false);
+                }}
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleAddEditor} color="primary">
@@ -138,7 +155,12 @@ function TextEditor() {
             disabled={readOnly}>
             Editor
           </Button>
-          <Dialog open={openRemove} onClose={() => setOpenRemove(false)}>
+          <Dialog
+            open={openRemove}
+            onClose={() => {
+              setError(null);
+              setOpenRemove(false);
+            }}>
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -152,9 +174,15 @@ function TextEditor() {
                 onChange={(e) => setRemoveEditor(e.target.value)}
                 fullWidth
               />
+              {error && <Alert severity="error">{error}</Alert>}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenRemove(false)} color="primary">
+              <Button
+                onClick={() => {
+                  setError(null);
+                  setOpenRemove(false);
+                }}
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleRemoveEditor} color="primary">
