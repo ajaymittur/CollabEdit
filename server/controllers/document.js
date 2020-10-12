@@ -80,14 +80,14 @@ const addEditor = async (req, res) => {
   const doc = await Docs.findById(groupId);
   const user = await User.findOne({ username }, "_id");
   const userId = user._id;
-  if (!doc.owner.equals(userId)) return res.status(401).send("User doesn't own this doc");
+  if (!doc.owner.equals(userId)) return res.status(401).send(`${username} doesn't own this doc`);
 
   const _editor = await User.findOne({ username: editor }, "_id");
-  if (!editor) return res.status(400).send(`${editor} doesn't exist`);
+  if (!_editor) return res.status(400).send(`${editor} doesn't exist`);
   const editorId = _editor._id;
 
   if (doc.editors.indexOf(editorId) > -1)
-    return res.status(200).send(`${editor} is already an editor`);
+    return res.status(400).send(`${editor} is already an editor`);
 
   doc.editors.push(editorId);
   await doc.save();
@@ -105,9 +105,9 @@ const removeEditor = async (req, res) => {
   if (!doc.owner.equals(userId)) return res.status(401).send("User doesn't own this doc");
 
   const _editor = await User.findOne({ username: editor }, "_id");
-  if (!editor) return res.status(400).send(`${editor} doesn't exist`);
+  if (!_editor) return res.status(400).send(`${editor} doesn't exist`);
   const editorId = _editor._id;
-  if (editorId === userId) return res.status(400).send("Cannot remove owner from editors");
+  if (editorId.equals(userId)) return res.status(400).send("Cannot remove owner from editors");
 
   await doc.updateOne({ $pull: { editors: editorId } });
 
