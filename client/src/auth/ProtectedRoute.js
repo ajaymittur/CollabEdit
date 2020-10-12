@@ -6,23 +6,18 @@ const isAuthenticated = () => {
   else return false;
 };
 
-export const ProtectedRoute = ({ children, ...rest }) => {
+function ProtectedRoute({ children, ...rest }) {
   return (
     <Route
       {...rest}
       render={(location) => {
         if (isAuthenticated()) return children;
         else {
-          return (
-            <Redirect
-              to={{
-                pathname: "/login",
-                //state: { from: location },
-              }}
-            />
-          );
+          return <Redirect to="/login" />;
         }
       }}
     />
   );
-};
+}
+
+export default ProtectedRoute;
