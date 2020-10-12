@@ -53,6 +53,9 @@ app.post("/login", userController.login);
 // Get Docs
 app.get("/docs", auth.authenticateToken, documentController.getDocs);
 
+// Get Shared Docs
+app.get("/docs/shared", auth.authenticateToken, documentController.getSharedDocs);
+
 // Get Single Docs
 app.get("/docs/:groupId", auth.authenticateToken, documentController.getSingleDoc);
 

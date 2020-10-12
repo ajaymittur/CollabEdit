@@ -47,6 +47,19 @@ const getDocs = async (req, res) => {
   res.json(docs);
 };
 
+const getSharedDocs = async (req, res) => {
+  const { username } = req.body;
+
+  const user = await User.findOne({ username });
+  const userId = user._id;
+  const sharedDocs = await Docs.find(
+    { editors: userId, owner: { $ne: userId } },
+    "title created_on"
+  );
+
+  res.json(sharedDocs);
+};
+
 const deleteDoc = async (req, res) => {
   const { username } = req.body;
   const { groupId } = req.params;
@@ -54,13 +67,9 @@ const deleteDoc = async (req, res) => {
   Docs.deleteOne({ _id: groupId }, async (err) => {
     if (err) res.status(500).json(err);
 
-    const user = await User.findOneAndUpdate(
-      { username },
-      { $pull: { docs: groupId } },
-      { new: true }
-    );
+    await User.findOneAndUpdate({ username }, { $pull: { docs: groupId } });
 
-    res.json(user.docs);
+    getDocs(req, res);
   });
 };
 
@@ -120,6 +129,7 @@ const getEditors = async (req, res) => {
 module.exports = {
   saveDocs,
   getDocs,
+  getSharedDocs,
   getSingleDoc,
   deleteDoc,
   addEditor,
