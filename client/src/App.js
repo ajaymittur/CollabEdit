@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { v4 as uuidv4 } from "uuid";
 
-import { ProtectedRoute } from "./auth/ProtectedRoute";
+import ProtectedRoute from "./auth/ProtectedRoute";
 import LoginForm from "./components/LoginForm/LoginForm";
 import SignUpForm from "./components/SignUpForm/SignUpForm";
 import NotFound from "./components/NotFound/NotFound";
@@ -13,15 +12,18 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route exact path="/">
-          <Redirect to={`/groups/${uuidv4()}`} />
-        </Route>
+        <ProtectedRoute exact path="/">
+          <Redirect to="/dashboard" />
+        </ProtectedRoute>
         <Route path="/login">
           <LoginForm />
         </Route>
         <Route path="/signup">
           <SignUpForm />
         </Route>
+        <ProtectedRoute path="/dashboard">
+          <Dashboard />
+        </ProtectedRoute>
         <Route path="/groups/:groupId">
           <TextEditor />
         </Route>

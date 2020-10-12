@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { useLocation, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -17,8 +17,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 
 import RichTextEditor from "./RichTextEditor";
-
-const ENDPOINT = "http://localhost:4000";
+import { ENDPOINT } from "../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -28,10 +27,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TextEditor() {
-  const { groupId } = useParams();
-  const classes = useStyles();
+  const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
-  const [readOnly, setReadOnly] = useState(false);
+  const { groupId } = useParams();
+  const history = useHistory();
+  const location = useLocation();
+  const classes = useStyles();
+  const [readOnly, setReadOnly] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
   const [addEditor, setAddEditor] = useState();
@@ -43,16 +45,13 @@ function TextEditor() {
         const response = await axios.get(`${ENDPOINT}/docs/${groupId}/editors`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // TODO:
-        // change this after @akshaymittur is done with user login
-        // get username from login
-        const username = "ajay";
         if (!response.data.includes(username)) setReadOnly(true);
         else setReadOnly(false);
       } catch (err) {
         console.error(err);
         setReadOnly(true);
       }
+      if (location.state.newDoc) setReadOnly(false);
     }
     fetchData();
   }, []);
@@ -93,12 +92,14 @@ function TextEditor() {
     <>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" startIcon={<ArrowBackIcon />} component={Link} to={"/dashboard"}>
+          <Button
+            color="inherit"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => history.push("/dashboard")}>
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
-            {/* TODO: Change this after @akshaymittur is done with user login  */}
-            Username
+            {username}
           </Typography>
           <Button
             color="inherit"

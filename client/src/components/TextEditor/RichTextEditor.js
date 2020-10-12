@@ -15,6 +15,7 @@ import {
   EditorTitle,
   EditorToolbar,
 } from "./EditorComponents";
+import { ENDPOINT } from "../../routes/routes";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -24,7 +25,6 @@ const HOTKEYS = {
 };
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
-const ENDPOINT = "http://localhost:4000";
 
 let socket = undefined;
 
