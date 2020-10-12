@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { useLocation, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,18 +15,12 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import Alert from "@material-ui/lab/Alert";
 
 import RichTextEditor from "./RichTextEditor";
-
-const ENDPOINT = "http://localhost:4000";
+import { ENDPOINT } from "../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   title: {
     marginLeft: "auto",
     marginRight: "auto",
@@ -34,14 +28,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TextEditor() {
-  const { groupId } = useParams();
-  const classes = useStyles();
+  const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
-  const [readOnly, setReadOnly] = useState(false);
+  const { groupId } = useParams();
+  const history = useHistory();
+  const location = useLocation();
+  const classes = useStyles();
+  const [readOnly, setReadOnly] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
   const [addEditor, setAddEditor] = useState();
   const [removeEditor, setRemoveEditor] = useState();
+  const [error, setError] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -49,33 +47,32 @@ function TextEditor() {
         const response = await axios.get(`${ENDPOINT}/docs/${groupId}/editors`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        // TODO:
-        // change this after @akshaymittur is done with user login
-        // get username from login
-        const username = "ajay";
         if (!response.data.includes(username)) setReadOnly(true);
         else setReadOnly(false);
       } catch (err) {
         console.error(err);
         setReadOnly(true);
       }
+      if (location.state.newDoc) setReadOnly(false);
     }
     fetchData();
   }, []);
 
   const handleAddEditor = async () => {
     try {
-      await axios.put(
+      await axios.post(
         `${ENDPOINT}/docs/${groupId}/addEditor`,
         { editor: addEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      setError(null);
+      setOpenAdd(false);
     } catch (err) {
       console.error(err);
+      setError(err.response.data);
     }
-    setOpenAdd(false);
   };
 
   const handleRemoveEditor = async () => {
@@ -89,21 +86,26 @@ function TextEditor() {
         },
         headers: { Authorization: `Bearer ${token}` },
       });
+      setError(null);
+      setOpenRemove(false);
     } catch (err) {
       console.error(err);
+      setError(err.response.data);
     }
-    setOpenRemove(false);
   };
 
   return (
     <>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" startIcon={<ArrowBackIcon />} component={Link} to={"/dashboard"}>
+          <Button
+            color="inherit"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => history.push("/dashboard")}>
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
-            Username
+            {username}
           </Typography>
           <Button
             color="inherit"
@@ -112,7 +114,12 @@ function TextEditor() {
             disabled={readOnly}>
             Editor
           </Button>
-          <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
+          <Dialog
+            open={openAdd}
+            onClose={() => {
+              setError(null);
+              setOpenAdd(false);
+            }}>
             <DialogTitle>Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -125,9 +132,15 @@ function TextEditor() {
                 onChange={(e) => setAddEditor(e.target.value)}
                 fullWidth
               />
+              {error && <Alert severity="error">{error}</Alert>}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenAdd(false)} color="primary">
+              <Button
+                onClick={() => {
+                  setError(null);
+                  setOpenAdd(false);
+                }}
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleAddEditor} color="primary">
@@ -142,7 +155,12 @@ function TextEditor() {
             disabled={readOnly}>
             Editor
           </Button>
-          <Dialog open={openRemove} onClose={() => setOpenRemove(false)}>
+          <Dialog
+            open={openRemove}
+            onClose={() => {
+              setError(null);
+              setOpenRemove(false);
+            }}>
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
@@ -156,9 +174,15 @@ function TextEditor() {
                 onChange={(e) => setRemoveEditor(e.target.value)}
                 fullWidth
               />
+              {error && <Alert severity="error">{error}</Alert>}
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setOpenRemove(false)} color="primary">
+              <Button
+                onClick={() => {
+                  setError(null);
+                  setOpenRemove(false);
+                }}
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleRemoveEditor} color="primary">
