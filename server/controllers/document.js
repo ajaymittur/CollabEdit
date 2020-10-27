@@ -41,7 +41,7 @@ const saveDocs = async (req, res) => {
 const getSingleDoc = async (req, res) => {
   const { groupId } = req.params;
 
-  const doc = await Docs.findById(groupId);
+  const doc = await Docs.findById(groupId).sort({ saved_on: "desc" });
 
   res.json(doc);
 };
