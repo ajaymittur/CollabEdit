@@ -29,6 +29,10 @@ const DocsSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  saved_on: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = mongoose.model("Docs", DocsSchema);
