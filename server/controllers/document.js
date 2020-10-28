@@ -25,7 +25,6 @@ const saveDocs = async (req, res) => {
       _id: groupId,
       title,
       value,
-      //saved_on: Date.now,
       owner: userId,
       editors: [userId],
     });
