@@ -30,12 +30,11 @@ import { css } from "emotion";
 import "./prism.css";
 
 const useStyles = makeStyles((theme) => ({
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
+  root: {
+    background: "black",
   },
-  selectEmpty: {
-    marginTop: theme.spacing(2),
+  whiteColor: {
+    color: "white",
   },
 }));
 
@@ -62,6 +61,8 @@ function CodeEditor() {
   const [value, setValue] = useState(initialValue);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+
+  const classes = useStyles();
 
   const decorate = useCallback(
     ([node, path]) => {
@@ -94,28 +95,31 @@ function CodeEditor() {
 
   return (
     <>
-      <div>
-        {" "}
-        <Select
-          labelId="langSelector"
-          id="langSelect"
-          value={langname}
-          onChange={(e) => setLangname(e.target.value)}
-        >
-          <MenuItem value="javascript">Javascript</MenuItem>
-          <MenuItem value="python">Python</MenuItem>
-          <MenuItem value="c">C</MenuItem>
-          <MenuItem value="sql">SQL</MenuItem>
-          <MenuItem value="java">Java</MenuItem>
-        </Select>
-      </div>
       {/* <PrismCode className={`language-${langname}`}> */}
       <Slate
         editor={editor}
         value={value}
         onChange={(value) => setValue(value)}
+        className={classes.color}
       >
         <EditorToolbar>
+          <Select
+            classes={{
+              root: classes.whiteColor,
+              icon: classes.whiteColor,
+            }}
+            labelId="langSelector"
+            id="langSelect"
+            value={langname}
+            onChange={(e) => setLangname(e.target.value)}
+          >
+            <MenuItem value="javascript">Javascript</MenuItem>
+            <MenuItem value="python">Python</MenuItem>
+            <MenuItem value="c">C/C++</MenuItem>
+            <MenuItem value="sql">SQL</MenuItem>
+            <MenuItem value="java">Java</MenuItem>
+          </Select>
+
           {/* {[
             ["bold", "format_bold"],
             ["italic", "format_italic"],
