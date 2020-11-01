@@ -1,25 +1,20 @@
 import Prism from "prismjs";
-import PrismCode from "react-prism";
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-sql";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-c";
-import { Slate, Editable, withReact } from "slate-react";
-import { Text, createEditor, Node } from "slate";
+import { Slate, withReact } from "slate-react";
+import { Text, createEditor } from "slate";
 import { withHistory } from "slate-history";
 import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useLocation, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import TextField from "@material-ui/core/TextField";
+
 import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
+
 import Select from "@material-ui/core/Select";
 import {
-  EditorButton,
-  EditorLinkButton,
   EditorPaper,
   EditorSaveButton,
   EditorTitle,
@@ -95,7 +90,6 @@ function CodeEditor() {
 
   return (
     <>
-      {/* <PrismCode className={`language-${langname}`}> */}
       <Slate
         editor={editor}
         value={value}
@@ -120,66 +114,17 @@ function CodeEditor() {
             <MenuItem value="java">Java</MenuItem>
           </Select>
 
-          {/* {[
-            ["bold", "format_bold"],
-            ["italic", "format_italic"],
-            ["underline", "format_underlined"],
-            ["code", "code"],
-          ].map(([format, icon]) => (
-            //<MarkButton format={format} icon={icon} disabled={readOnly} />
-            <MarkButton format={format} icon={icon} />
-          ))} */}
-          {/* <LinkButton format="link" icon="link" disabled={readOnly} /> */}
-          {/* <LinkButton format="link" icon="link" />
-          {[
-            ["heading-one", "looks_one"],
-            ["heading-two", "looks_two"],
-            ["heading-three", "looks_3"],
-            ["block-quote", "format_quote"],
-            ["numbered-list", "format_list_numbered"],
-            ["bulleted-list", "format_list_bulleted"],
-          ].map(([format, icon]) => (
-            // <BlockButton format={format} icon={icon} disabled={readOnly} />
-            <BlockButton format={format} icon={icon} />
-          ))} */}
-          <EditorTitle
-          // groupId={groupId}
-          // value={title}
-          //disabled={readOnly}
-          //handleChange={handleTitleChange}
-          />
-          <EditorSaveButton
-          // title={title}
-          // value={value}
-          //ENDPOINT={`${ENDPOINT}/docs/${groupId}`}
-          //disabled={readOnly}
-          />
+          <EditorTitle />
+          <EditorSaveButton />
         </EditorToolbar>
         <EditorPaper
-          //renderElement={renderElement}
           decorate={decorate}
           renderLeaf={renderLeaf}
           placeholder="Start writing..."
           spellCheck
           autoFocus
-          // readOnly={readOnly}
-          // onKeyDown={(event) => {
-          //   for (const hotkey in HOTKEYS) {
-          //     if (isHotkey(hotkey, event)) {
-          //       event.preventDefault();
-          //       const mark = HOTKEYS[hotkey];
-          //       toggleMark(editor, mark);
-          //     }
-          //   }
-          // }}
         />
-        {/* <Editable
-          decorate={decorate}
-          renderLeaf={renderLeaf}
-          placeholder="Write some code..."
-        /> */}
       </Slate>
-      {/* </PrismCode> */}
     </>
   );
 }
