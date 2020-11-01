@@ -9,6 +9,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { useLocation, useHistory, useParams } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
+import TextField from "@material-ui/core/TextField";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
@@ -56,9 +57,7 @@ function CodeEditor() {
         </Select>
       </div>
       <PrismCode className={`language-${langname}`}>
-        {`
-  fsdd
-`}
+        {/* <TextField value={code} onChange={(e) => setCode(e.target.value)} /> */}
       </PrismCode>
     </>
   );
