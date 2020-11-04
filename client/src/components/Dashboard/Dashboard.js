@@ -156,7 +156,9 @@ function Dashboard() {
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
-          onClick={() => history.push({ pathname: `/groups/${id}`, state: { newDoc: false } })}>
+          onClick={() =>
+            history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })
+          }>
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -169,7 +171,7 @@ function Dashboard() {
   const sharedDocsList = shared.map(({ _id: id, title, created_on }) => (
     <ListItem
       button
-      onClick={() => history.push({ pathname: `/groups/${id}`, state: { newDoc: false } })}
+      onClick={() => history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })}
       key={id}>
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
@@ -230,7 +232,7 @@ function Dashboard() {
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/groups/${uuidv4()}`, state: { newDoc: true } })
+              history.push({ pathname: `/docs/groups/${uuidv4()}`, state: { newDoc: true } })
             }>
             <ListItemIcon>
               <AddIcon color="secondary" />
