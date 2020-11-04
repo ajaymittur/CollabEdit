@@ -134,6 +134,11 @@ function RichTextEditor({ groupId, readOnly }) {
         autoFocus
         readOnly={readOnly}
         onKeyDown={(event) => {
+          if (isHotkey("tab", event)) {
+            event.preventDefault();
+            editor.insertText("    ");
+            return;
+          }
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
               event.preventDefault();

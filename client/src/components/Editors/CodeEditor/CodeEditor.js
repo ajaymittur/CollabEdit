@@ -170,6 +170,13 @@ function CodeEditor({ groupId, readOnly }) {
           renderLeaf={renderLeaf}
           placeholder="Start writing..."
           readOnly={readOnly}
+          onKeyDown={(event) => {
+            if (event.key == "Tab") {
+              event.preventDefault();
+              editor.insertText("    ");
+              return;
+            }
+          }}
           spellCheck
           autoFocus
         />
