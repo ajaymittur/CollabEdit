@@ -17,12 +17,20 @@ const io = require("socket.io")(http);
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on("new-value", (groupId, newValue) => {
-    socket.broadcast.emit(`new-value-${groupId}`, newValue);
+  socket.on("new-doc-value", (groupId, newValue) => {
+    socket.broadcast.emit(`new-doc-value-${groupId}`, newValue);
   });
 
-  socket.on("new-title", (groupId, newTitle) => {
-    socket.broadcast.emit(`new-title-${groupId}`, newTitle);
+  socket.on("new-doc-title", (groupId, newTitle) => {
+    socket.broadcast.emit(`new-doc-title-${groupId}`, newTitle);
+  });
+
+  socket.on("new-code-value", (groupId, newValue) => {
+    socket.broadcast.emit(`new-code-value-${groupId}`, newValue);
+  });
+
+  socket.on("new-code-title", (groupId, newTitle) => {
+    socket.broadcast.emit(`new-code-title-${groupId}`, newTitle);
   });
 
   socket.on("disconnect", () => {
