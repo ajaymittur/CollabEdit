@@ -110,7 +110,7 @@ app.get(
 // --------------Code---------------
 
 // Get Code
-//app.get("/code", auth.authenticateToken, codeController.getCode);
+app.get("/code", auth.authenticateToken, codeController.getCode);
 
 // Get Shared Code
 // app.get(
