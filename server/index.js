@@ -62,25 +62,49 @@ app.post("/login", userController.login);
 app.get("/docs", auth.authenticateToken, documentController.getDocs);
 
 // Get Shared Docs
-app.get("/docs/shared", auth.authenticateToken, documentController.getSharedDocs);
+app.get(
+  "/docs/shared",
+  auth.authenticateToken,
+  documentController.getSharedDocs
+);
 
 // Get Single Docs
-app.get("/docs/:groupId", auth.authenticateToken, documentController.getSingleDoc);
+app.get(
+  "/docs/:groupId",
+  auth.authenticateToken,
+  documentController.getSingleDoc
+);
 
 // Create/Update Doc
 app.put("/docs/:groupId", auth.authenticateToken, documentController.saveDocs);
 
 // Delete Doc
-app.delete("/docs/:groupId", auth.authenticateToken, documentController.deleteDoc);
+app.delete(
+  "/docs/:groupId",
+  auth.authenticateToken,
+  documentController.deleteDoc
+);
 
 // Add Editor
-app.post("/docs/:groupId/addEditor", auth.authenticateToken, documentController.addEditor);
+app.post(
+  "/docs/:groupId/addEditor",
+  auth.authenticateToken,
+  documentController.addEditor
+);
 
 // Remove Editor
-app.delete("/docs/:groupId/removeEditor", auth.authenticateToken, documentController.removeEditor);
+app.delete(
+  "/docs/:groupId/removeEditor",
+  auth.authenticateToken,
+  documentController.removeEditor
+);
 
 // Get Editors
-app.get("/docs/:groupId/editors", auth.authenticateToken, documentController.getEditors);
+app.get(
+  "/docs/:groupId/editors",
+  auth.authenticateToken,
+  documentController.getEditors
+);
 
 http.listen(process.env.PORT || 4000, () => {
   console.log("Listening on Port 4000");

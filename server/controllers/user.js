@@ -32,7 +32,6 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
   const { name, username, email, password } = req.body;
-
   if (!username || !password) return res.status(400).json("Incorrect Signup");
 
   try {
@@ -58,7 +57,7 @@ const signup = async (req, res) => {
     return res.status(400).json("Invalid Token/Password");
   }
 
-  const token = generateToken(req.body.username);
+  const token = generateToken(req.body);
   console.log("Signed Up!");
   const response = {
     name,
