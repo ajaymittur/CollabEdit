@@ -8,6 +8,7 @@ const auth = require("./middleware/authenticateToken");
 
 const userController = require("./controllers/user");
 const documentController = require("./controllers/document");
+const codeController = require("./controllers/code");
 
 const app = express();
 
@@ -85,26 +86,76 @@ app.delete(
   documentController.deleteDoc
 );
 
-// Add Editor
+// Add Doc Editor
 app.post(
   "/docs/:groupId/addEditor",
   auth.authenticateToken,
   documentController.addEditor
 );
 
-// Remove Editor
+// Remove Doc Editor
 app.delete(
   "/docs/:groupId/removeEditor",
   auth.authenticateToken,
   documentController.removeEditor
 );
 
-// Get Editors
+// Get Doc Editors
 app.get(
   "/docs/:groupId/editors",
   auth.authenticateToken,
   documentController.getEditors
 );
+
+// --------------Code---------------
+
+// Get Code
+//app.get("/code", auth.authenticateToken, codeController.getCode);
+
+// Get Shared Code
+// app.get(
+//   "/code/shared",
+//   auth.authenticateToken,
+//   codeController.getSharedDocs
+// );
+
+// Get Single Code
+// app.get(
+//   "/code/:groupId",
+//   auth.authenticateToken,
+//   codeController.getSingleDoc
+// );
+
+// Create/Update Code
+//app.put("/code/:groupId", auth.authenticateToken, codeController.saveDocs);
+
+// Delete Code
+// app.delete(
+//   "/code/:groupId",
+//   auth.authenticateToken,
+//   codeController.deleteDoc
+// );
+
+// Add Code Editor
+// app.post(
+//   "/code/:groupId/addEditor",
+//   auth.authenticateToken,
+//   codeController.addEditor
+// );
+
+// Remove Code Editor
+// app.delete(
+//   "/code/:groupId/removeEditor",
+//   auth.authenticateToken,
+//   codeController.removeEditor
+// );
+
+// Get Code Editors
+// app.get(
+//   "/code/:groupId/editors",
+//   auth.authenticateToken,
+//   codeController.getEditors
+// );
 
 http.listen(process.env.PORT || 4000, () => {
   console.log("Listening on Port 4000");
