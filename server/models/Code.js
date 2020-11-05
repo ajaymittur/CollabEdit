@@ -11,6 +11,10 @@ const CodeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  language: {
+    type: String,
+    required: true,
+  },
   value: {
     type: Object,
     required: true,
