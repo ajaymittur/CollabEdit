@@ -95,16 +95,18 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [docs, setDocs] = useState([]);
   const [sharedDocs, setSharedDocs] = useState([]);
-  const [drawerStyles, setDrawerStyles] = useState(classes.drawer + " " + classes.drawerClose);
+  const [drawerStyles, setDrawerStyles] = useState(
+    classes.drawer + " " + classes.drawerClose
+  );
   const [paperStyles, setPaperStyles] = useState(classes.drawerClose);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        console.log(username);
         const myDocs = await axios.get(GETDOCS, {
           headers: { Authorization: `Bearer ${token}` },
-          data: { username: username },
         });
 
         if (!myDocs.data) throw Error(`Null response from ${GETDOCS}`);
@@ -112,10 +114,10 @@ function Dashboard() {
 
         const sharedDocs = await axios.get(GETSHAREDDOCS, {
           headers: { Authorization: `Bearer ${token}` },
-          data: { username: username },
         });
 
-        if (!sharedDocs.data) throw Error(`Null response from ${GETSHAREDDOCS}`);
+        if (!sharedDocs.data)
+          throw Error(`Null response from ${GETSHAREDDOCS}`);
         setSharedDocs(sharedDocs.data);
       } catch (err) {
         console.error(err);
@@ -158,8 +160,12 @@ function Dashboard() {
         <IconButton
           className={classes.buttonSpacing}
           onClick={() =>
-            history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })
-          }>
+            history.push({
+              pathname: `/docs/groups/${id}`,
+              state: { newDoc: false },
+            })
+          }
+        >
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -172,8 +178,14 @@ function Dashboard() {
   const sharedDocsList = sharedDocs.map(({ _id: id, title, created_on }) => (
     <ListItem
       button
-      onClick={() => history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })}
-      key={id}>
+      onClick={() =>
+        history.push({
+          pathname: `/docs/groups/${id}`,
+          state: { newDoc: false },
+        })
+      }
+      key={id}
+    >
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -193,13 +205,18 @@ function Dashboard() {
             color="inherit"
             onClick={toggleOpen}
             edge="start"
-            className={classes.buttonSpacing}>
+            className={classes.buttonSpacing}
+          >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             {username}
           </Typography>
-          <Button color="inherit" startIcon={<ExitToAppIcon />} onClick={handleSignOut}>
+          <Button
+            color="inherit"
+            startIcon={<ExitToAppIcon />}
+            onClick={handleSignOut}
+          >
             Sign Out
           </Button>
         </Toolbar>
@@ -209,7 +226,8 @@ function Dashboard() {
         className={drawerStyles}
         classes={{
           paper: paperStyles,
-        }}>
+        }}
+      >
         <div className={classes.toolbar} />
         <Divider />
         <List>
@@ -217,9 +235,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 0}
-            onClick={(e) => setSelectedIndex(0)}>
+            onClick={(e) => setSelectedIndex(0)}
+          >
             <ListItemIcon>
-              <DescriptionIcon color={selectedIndex === 0 ? "primary" : "inherit"} />
+              <DescriptionIcon
+                color={selectedIndex === 0 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="My Docs" />
           </ListItem>
@@ -227,9 +248,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 1}
-            onClick={(e) => setSelectedIndex(1)}>
+            onClick={(e) => setSelectedIndex(1)}
+          >
             <ListItemIcon>
-              <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
+              <FolderSharedIcon
+                color={selectedIndex === 1 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="Docs Shared With Me" />
           </ListItem>
@@ -237,8 +261,12 @@ function Dashboard() {
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/docs/groups/${uuidv4()}`, state: { newDoc: true } })
-            }>
+              history.push({
+                pathname: `/docs/groups/${uuidv4()}`,
+                state: { newDoc: true },
+              })
+            }
+          >
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
@@ -248,7 +276,8 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 2}
-            onClick={(e) => setSelectedIndex(2)}>
+            onClick={(e) => setSelectedIndex(2)}
+          >
             <ListItemIcon>
               <CodeIcon color={selectedIndex === 2 ? "primary" : "inherit"} />
             </ListItemIcon>
@@ -258,9 +287,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 3}
-            onClick={(e) => setSelectedIndex(3)}>
+            onClick={(e) => setSelectedIndex(3)}
+          >
             <ListItemIcon>
-              <FolderSharedIcon color={selectedIndex === 3 ? "primary" : "inherit"} />
+              <FolderSharedIcon
+                color={selectedIndex === 3 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="Codes Shared With Me" />
           </ListItem>
@@ -268,8 +300,12 @@ function Dashboard() {
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/code/groups/${uuidv4()}`, state: { newDoc: true } })
-            }>
+              history.push({
+                pathname: `/code/groups/${uuidv4()}`,
+                state: { newDoc: true },
+              })
+            }
+          >
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
