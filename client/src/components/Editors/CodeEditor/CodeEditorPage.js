@@ -17,8 +17,8 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 
-import RichTextEditor from "./RichTextEditor";
-import { ENDPOINT } from "../../routes/routes";
+import CodeEditor from "./CodeEditor";
+import { ENDPOINT } from "../../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function TextEditor() {
+function CodeEditorPage() {
   const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
   const { groupId } = useParams();
@@ -44,7 +44,7 @@ function TextEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`${ENDPOINT}/docs/${groupId}/editors`, {
+        const response = await axios.get(`${ENDPOINT}/code/${groupId}/editors`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.data.includes(username)) setReadOnly(true);
@@ -61,7 +61,7 @@ function TextEditor() {
   const handleAddEditor = async () => {
     try {
       await axios.post(
-        `${ENDPOINT}/docs/${groupId}/addEditor`,
+        `${ENDPOINT}/code/${groupId}/addEditor`,
         { editor: addEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -80,7 +80,7 @@ function TextEditor() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: `${ENDPOINT}/docs/${groupId}/removeEditor`,
+        url: `${ENDPOINT}/code/${groupId}/removeEditor`,
         data: {
           editor: removeEditor,
         },
@@ -192,9 +192,9 @@ function TextEditor() {
           </Dialog>
         </Toolbar>
       </AppBar>
-      <RichTextEditor groupId={groupId} readOnly={readOnly} />
+      <CodeEditor groupId={groupId} readOnly={readOnly} />
     </>
   );
 }
 
-export default TextEditor;
+export default CodeEditorPage;

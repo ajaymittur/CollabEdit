@@ -14,8 +14,8 @@ import {
   EditorSaveButton,
   EditorTitle,
   EditorToolbar,
-} from "./EditorComponents";
-import { ENDPOINT } from "../../routes/routes";
+} from "../EditorComponents";
+import { ENDPOINT } from "../../../routes/routes";
 
 const HOTKEYS = {
   "mod+b": "bold",
@@ -40,12 +40,12 @@ function RichTextEditor({ groupId, readOnly }) {
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    socket.on(`new-value-${groupId}`, (newValue) => {
+    socket.on(`new-doc-value-${groupId}`, (newValue) => {
       Transforms.deselect(editor);
       setValue(newValue);
     });
 
-    socket.on(`new-title-${groupId}`, (newTitle) => {
+    socket.on(`new-doc-title-${groupId}`, (newTitle) => {
       setTitle(newTitle);
     });
 
@@ -83,12 +83,12 @@ function RichTextEditor({ groupId, readOnly }) {
 
   const handleValueChange = (value) => {
     setValue(value);
-    socket.emit("new-value", groupId, value);
+    socket.emit("new-doc-value", groupId, value);
   };
 
   const handleTitleChange = (title) => {
     setTitle(title);
-    socket.emit("new-title", groupId, title);
+    socket.emit("new-doc-title", groupId, title);
   };
 
   return (
@@ -134,6 +134,11 @@ function RichTextEditor({ groupId, readOnly }) {
         autoFocus
         readOnly={readOnly}
         onKeyDown={(event) => {
+          if (isHotkey("tab", event)) {
+            event.preventDefault();
+            editor.insertText("    ");
+            return;
+          }
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
               event.preventDefault();

@@ -15,6 +15,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
+import CodeIcon from "@material-ui/icons/Code";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FolderSharedIcon from "@material-ui/icons/FolderShared";
@@ -26,7 +27,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ENDPOINT, GETDOCS, GETSHAREDDOCS } from "../../routes/routes";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,7 +94,7 @@ function Dashboard() {
   const listClasses = useJupiterListItemStyles();
   const [open, setOpen] = useState(false);
   const [docs, setDocs] = useState([]);
-  const [shared, setShared] = useState([]);
+  const [sharedDocs, setSharedDocs] = useState([]);
   const [drawerStyles, setDrawerStyles] = useState(classes.drawer + " " + classes.drawerClose);
   const [paperStyles, setPaperStyles] = useState(classes.drawerClose);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -115,7 +116,7 @@ function Dashboard() {
         });
 
         if (!sharedDocs.data) throw Error(`Null response from ${GETSHAREDDOCS}`);
-        setShared(sharedDocs.data);
+        setSharedDocs(sharedDocs.data);
       } catch (err) {
         console.error(err);
       }
@@ -156,7 +157,9 @@ function Dashboard() {
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
-          onClick={() => history.push({ pathname: `/groups/${id}`, state: { newDoc: false } })}>
+          onClick={() =>
+            history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })
+          }>
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -166,10 +169,10 @@ function Dashboard() {
     </ListItem>
   ));
 
-  const sharedDocsList = shared.map(({ _id: id, title, created_on }) => (
+  const sharedDocsList = sharedDocs.map(({ _id: id, title, created_on }) => (
     <ListItem
       button
-      onClick={() => history.push({ pathname: `/groups/${id}`, state: { newDoc: false } })}
+      onClick={() => history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })}
       key={id}>
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
@@ -177,6 +180,10 @@ function Dashboard() {
       </ListItemIcon>
     </ListItem>
   ));
+
+  // TODO: @akshaymittur define these when integrating with backend to be used in lines 284 and 285
+  // const codesList = ...
+  // const sharedCodesList = ...
 
   return (
     <div className={classes.root}>
@@ -224,18 +231,49 @@ function Dashboard() {
             <ListItemIcon>
               <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
             </ListItemIcon>
-            <ListItemText primary="Shared With Me" />
+            <ListItemText primary="Docs Shared With Me" />
           </ListItem>
           <ListItem
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/groups/${uuidv4()}`, state: { newDoc: true } })
+              history.push({ pathname: `/docs/groups/${uuidv4()}`, state: { newDoc: true } })
             }>
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
+          </ListItem>
+          <ListItem
+            classes={listClasses}
+            button
+            selected={selectedIndex === 2}
+            onClick={(e) => setSelectedIndex(2)}>
+            <ListItemIcon>
+              <CodeIcon color={selectedIndex === 2 ? "primary" : "inherit"} />
+            </ListItemIcon>
+            <ListItemText primary="My Codes" />
+          </ListItem>
+          <ListItem
+            classes={listClasses}
+            button
+            selected={selectedIndex === 3}
+            onClick={(e) => setSelectedIndex(3)}>
+            <ListItemIcon>
+              <FolderSharedIcon color={selectedIndex === 3 ? "primary" : "inherit"} />
+            </ListItemIcon>
+            <ListItemText primary="Codes Shared With Me" />
+          </ListItem>
+          <ListItem
+            classes={listClasses}
+            button
+            onClick={() =>
+              history.push({ pathname: `/code/groups/${uuidv4()}`, state: { newDoc: true } })
+            }>
+            <ListItemIcon>
+              <AddIcon color="secondary" />
+            </ListItemIcon>
+            <ListItemText primary="Create New Code" />
           </ListItem>
         </List>
       </Drawer>
@@ -243,6 +281,9 @@ function Dashboard() {
         <div className={classes.toolbar} />
         {selectedIndex === 0 && <List>{docsList}</List>}
         {selectedIndex === 1 && <List>{sharedDocsList}</List>}
+        {/* TODO: @akshaymittur uncomment the below lines after creating routes and integrating with backend */}
+        {/* {selectedIndex === 2 && <List>{codesList}</List>} */}
+        {/* {selectedIndex === 3 && <List>{sharedCodesList}</List>} */}
       </main>
     </div>
   );
