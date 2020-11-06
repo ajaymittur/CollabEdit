@@ -25,7 +25,13 @@ import AddIcon from "@material-ui/icons/Add";
 import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 import { v4 as uuidv4 } from "uuid";
 
-import { ENDPOINT, GETDOCS, GETSHAREDDOCS } from "../../routes/routes";
+import {
+  ENDPOINT,
+  GETDOCS,
+  GETSHAREDDOCS,
+  GETCODE,
+  GETSHAREDCODE,
+} from "../../routes/routes";
 
 const drawerWidth = 250;
 
@@ -122,6 +128,21 @@ function Dashboard() {
         if (!sharedDocs.data)
           throw Error(`Null response from ${GETSHAREDDOCS}`);
         setSharedDocs(sharedDocs.data);
+
+        const myCode = await axios.get(GETCODE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!myCode.data) throw Error(`Null response from ${GETCODE}`);
+        setCode(myCode.data);
+
+        const sharedCode = await axios.get(GETSHAREDCODE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!sharedCode.data)
+          throw Error(`Null response from ${GETSHAREDCODE}`);
+        setSharedCode(sharedCode.data);
       } catch (err) {
         console.error(err);
       }
@@ -196,10 +217,6 @@ function Dashboard() {
       </ListItemIcon>
     </ListItem>
   ));
-
-  // TODO: @akshaymittur define these when integrating with backend to be used in lines 284 and 285
-  // const codesList = ...
-  // const sharedCodesList = ...
 
   const deleteCode = async (id) => {
     try {

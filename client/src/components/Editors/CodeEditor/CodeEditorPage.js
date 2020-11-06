@@ -56,7 +56,7 @@ function CodeEditorPage() {
         console.error(err);
         setReadOnly(true);
       }
-      if (location.state.newCode) setReadOnly(false);
+      if (location.state && location.state.newCode) setReadOnly(false);
     }
     fetchData();
   }, []);

@@ -2,11 +2,13 @@ const User = require("../models/User");
 const Code = require("../models/Code");
 
 const saveCode = async (req, res) => {
+  console.log(req.body);
   const { username, title, value, language } = req.body;
   const { groupId } = req.params;
 
   const user = await User.findOne({ username });
   const userId = user._id;
+  console.log(req.body);
 
   try {
     const modifiedCode = await Code.findById(groupId);
@@ -16,13 +18,13 @@ const saveCode = async (req, res) => {
 
     modifiedCode.value = value;
     modifiedCode.title = title;
-    modifiedCode.language = langauge;
-    modifiedCode.saved_on = Date.now;
+    modifiedCode.language = language;
+    modifiedCode.saved_on = Date.now();
     await modifiedCode.save();
 
     res.send(`Code ${groupId} updated`);
   } catch (DocumentNotFoundError) {
-    const newCode = new Docs({
+    const newCode = new Code({
       _id: groupId,
       title,
       value,

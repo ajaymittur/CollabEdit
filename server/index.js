@@ -34,6 +34,10 @@ io.on("connection", (socket) => {
     socket.broadcast.emit(`new-code-title-${groupId}`, newTitle);
   });
 
+  socket.on("new-code-language", (groupId, newLanguage) => {
+    socket.broadcast.emit(`new-code-language-${groupId}`, newLanguage);
+  });
+
   socket.on("disconnect", () => {
     console.log("a user disconnected");
   });

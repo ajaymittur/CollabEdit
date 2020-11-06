@@ -42,14 +42,17 @@ const initialValue = [
   },
 ];
 
+const languages = ["javascript", "python", "c"];
+
 let socket = undefined;
 
 function CodeEditor({ groupId, readOnly }) {
   const savedValue = JSON.parse(localStorage.getItem("content"));
+  const savedLanguage = localStorage.getItem("language");
   const savedTitle = localStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState(savedLanguage || "javascript");
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -64,6 +67,10 @@ function CodeEditor({ groupId, readOnly }) {
 
     socket.on(`new-code-title-${groupId}`, (newTitle) => {
       setTitle(newTitle);
+    });
+
+    socket.on(`new-code-language-${groupId}`, (newLanguage) => {
+      setLanguage(newLanguage);
     });
 
     async function fetchData() {
@@ -86,6 +93,7 @@ function CodeEditor({ groupId, readOnly }) {
     return () => {
       localStorage.removeItem("title");
       localStorage.removeItem("content");
+      localStorage.removeItem("language");
       socket.disconnect();
     };
   }, []);
@@ -94,10 +102,11 @@ function CodeEditor({ groupId, readOnly }) {
     const autoSave = setTimeout(() => {
       localStorage.setItem("content", JSON.stringify(value));
       localStorage.setItem("title", title);
+      localStorage.setItem("language", language);
     }, 3000);
 
     return () => clearTimeout(autoSave);
-  }, [value, title]);
+  }, [value, title, language]);
 
   const handleValueChange = (value) => {
     setValue(value);
@@ -107,6 +116,10 @@ function CodeEditor({ groupId, readOnly }) {
   const handleTitleChange = (title) => {
     setTitle(title);
     socket.emit("new-code-title", groupId, title);
+  };
+  const handleLanguageChange = (lang) => {
+    setLanguage(lang);
+    socket.emit("new-code-language", groupId, lang);
   };
 
   const decorate = useCallback(
@@ -156,7 +169,7 @@ function CodeEditor({ groupId, readOnly }) {
             id="langSelect"
             value={language}
             readOnly={readOnly}
-            onChange={(e) => setLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e.target.value)}
           >
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
@@ -173,6 +186,7 @@ function CodeEditor({ groupId, readOnly }) {
           <EditorSaveButton
             title={title}
             value={value}
+            language={language}
             ENDPOINT={`${ENDPOINT}/code/${groupId}`}
             disabled={readOnly}
           />
