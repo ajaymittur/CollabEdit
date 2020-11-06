@@ -113,49 +113,37 @@ app.get(
 app.get("/code", auth.authenticateToken, codeController.getCode);
 
 // Get Shared Code
-// app.get(
-//   "/code/shared",
-//   auth.authenticateToken,
-//   codeController.getSharedDocs
-// );
+app.get("/code/shared", auth.authenticateToken, codeController.getSharedCode);
 
 // Get Single Code
-// app.get(
-//   "/code/:groupId",
-//   auth.authenticateToken,
-//   codeController.getSingleDoc
-// );
+app.get("/code/:groupId", auth.authenticateToken, codeController.getSingleCode);
 
 // Create/Update Code
-//app.put("/code/:groupId", auth.authenticateToken, codeController.saveDocs);
+app.put("/code/:groupId", auth.authenticateToken, codeController.saveCode);
 
 // Delete Code
-// app.delete(
-//   "/code/:groupId",
-//   auth.authenticateToken,
-//   codeController.deleteDoc
-// );
+app.delete("/code/:groupId", auth.authenticateToken, codeController.deleteCode);
 
 // Add Code Editor
-// app.post(
-//   "/code/:groupId/addEditor",
-//   auth.authenticateToken,
-//   codeController.addEditor
-// );
+app.post(
+  "/code/:groupId/addEditor",
+  auth.authenticateToken,
+  codeController.addCodeEditor
+);
 
 // Remove Code Editor
-// app.delete(
-//   "/code/:groupId/removeEditor",
-//   auth.authenticateToken,
-//   codeController.removeEditor
-// );
+app.delete(
+  "/code/:groupId/removeEditor",
+  auth.authenticateToken,
+  codeController.removeCodeEditor
+);
 
 // Get Code Editors
-// app.get(
-//   "/code/:groupId/editors",
-//   auth.authenticateToken,
-//   codeController.getEditors
-// );
+app.get(
+  "/code/:groupId/editors",
+  auth.authenticateToken,
+  codeController.getCodeEditors
+);
 
 http.listen(process.env.PORT || 4000, () => {
   console.log("Listening on Port 4000");
