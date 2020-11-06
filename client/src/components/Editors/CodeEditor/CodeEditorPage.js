@@ -64,7 +64,7 @@ function CodeEditorPage() {
   const handleAddCodeEditor = async () => {
     try {
       await axios.post(
-        `${ENDPOINT}/code/${groupId}/addCodeEditor`,
+        `${ENDPOINT}/code/${groupId}/addEditor`,
         { editor: addCodeEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +83,7 @@ function CodeEditorPage() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: `${ENDPOINT}/code/${groupId}/removeCodeEditor`,
+        url: `${ENDPOINT}/code/${groupId}/removeEditor`,
         data: {
           editor: removeCodeEditor,
         },
