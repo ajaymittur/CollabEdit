@@ -222,13 +222,13 @@ function Dashboard() {
           onClick={() =>
             history.push({
               pathname: `/code/groups/${id}`,
-              state: { newDoc: false },
+              state: { newCode: false },
             })
           }
         >
           <KeyboardArrowRightIcon />
         </IconButton>
-        <IconButton color="secondary" onClick={() => deleteDoc(id)}>
+        <IconButton color="secondary" onClick={() => deleteCode(id)}>
           <DeleteIcon />
         </IconButton>
       </ListItemIcon>
@@ -358,7 +358,7 @@ function Dashboard() {
             onClick={() =>
               history.push({
                 pathname: `/code/groups/${uuidv4()}`,
-                state: { newDoc: true },
+                state: { newCode: true },
               })
             }
           >

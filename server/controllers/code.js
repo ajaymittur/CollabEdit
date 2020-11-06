@@ -138,7 +138,6 @@ const getCodeEditors = async (req, res) => {
   const editors = await User.find({ _id: { $in: code.editors } }, "username");
 
   editors.forEach((val, i) => (editors[i] = editors[i].username));
-
   res.json(editors);
 };
 
