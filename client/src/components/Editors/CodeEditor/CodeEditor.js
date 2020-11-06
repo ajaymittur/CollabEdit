@@ -12,7 +12,12 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { EditorPaper, EditorSaveButton, EditorTitle, EditorToolbar } from "../EditorComponents";
+import {
+  EditorPaper,
+  EditorSaveButton,
+  EditorTitle,
+  EditorToolbar,
+} from "../EditorComponents";
 import { css } from "emotion";
 import io from "socket.io-client";
 import "./prism.css";
@@ -44,7 +49,7 @@ function CodeEditor({ groupId, readOnly }) {
   const savedTitle = localStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
-  const [langname, setLangname] = useState("javascript");
+  const [language, setLanguage] = useState("javascript");
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -70,6 +75,7 @@ function CodeEditor({ groupId, readOnly }) {
         if (response) {
           setValue(response.data.value);
           setTitle(response.data.title);
+          setLanguage(response.data.language);
         }
       } catch (err) {
         console.error(err);
@@ -109,7 +115,7 @@ function CodeEditor({ groupId, readOnly }) {
       if (!Text.isText(node)) {
         return ranges;
       }
-      const tokens = Prism.tokenize(node.text, Prism.languages[langname]);
+      const tokens = Prism.tokenize(node.text, Prism.languages[language]);
       let start = 0;
 
       for (const token of tokens) {
@@ -129,12 +135,17 @@ function CodeEditor({ groupId, readOnly }) {
 
       return ranges;
     },
-    [langname]
+    [language]
   );
 
   return (
     <>
-      <Slate editor={editor} value={value} onChange={handleValueChange} className={classes.color}>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={handleValueChange}
+        className={classes.color}
+      >
         <EditorToolbar>
           <Select
             classes={{
@@ -143,9 +154,10 @@ function CodeEditor({ groupId, readOnly }) {
             }}
             labelId="langSelector"
             id="langSelect"
-            value={langname}
+            value={language}
             readOnly={readOnly}
-            onChange={(e) => setLangname(e.target.value)}>
+            onChange={(e) => setLanguage(e.target.value)}
+          >
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
             <MenuItem value="c">C/C++</MenuItem>
@@ -240,7 +252,8 @@ const Leaf = ({ attributes, children, leaf }) => {
         css`
           color: #dd4a68;
         `}
-      `}>
+      `}
+    >
       {children}
     </span>
   );

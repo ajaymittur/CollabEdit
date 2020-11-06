@@ -87,6 +87,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Dashboard() {
+  document.title = "CollabEdit | Dashboard";
+
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username") || "User";
   const history = useHistory();
@@ -95,6 +97,8 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [docs, setDocs] = useState([]);
   const [sharedDocs, setSharedDocs] = useState([]);
+  const [code, setCode] = useState([]);
+  const [sharedCode, setSharedCode] = useState([]);
   const [drawerStyles, setDrawerStyles] = useState(
     classes.drawer + " " + classes.drawerClose
   );
@@ -104,7 +108,6 @@ function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log(username);
         const myDocs = await axios.get(GETDOCS, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -141,11 +144,12 @@ function Dashboard() {
     localStorage.clear();
     history.push("/login");
   };
+
   const deleteDoc = async (id) => {
     try {
       const response = await axios.delete(`${ENDPOINT}/docs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username: username },
+        data: { username },
       });
       setDocs(response.data);
     } catch (err) {
@@ -196,6 +200,58 @@ function Dashboard() {
   // TODO: @akshaymittur define these when integrating with backend to be used in lines 284 and 285
   // const codesList = ...
   // const sharedCodesList = ...
+
+  const deleteCode = async (id) => {
+    try {
+      const response = await axios.delete(`${ENDPOINT}/code/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { username },
+      });
+      setCode(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const codeList = code.map(({ _id: id, title, created_on }) => (
+    <ListItem key={id}>
+      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemIcon>
+        <IconButton
+          className={classes.buttonSpacing}
+          onClick={() =>
+            history.push({
+              pathname: `/code/groups/${id}`,
+              state: { newDoc: false },
+            })
+          }
+        >
+          <KeyboardArrowRightIcon />
+        </IconButton>
+        <IconButton color="secondary" onClick={() => deleteDoc(id)}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemIcon>
+    </ListItem>
+  ));
+
+  const sharedCodeList = sharedCode.map(({ _id: id, title, created_on }) => (
+    <ListItem
+      button
+      onClick={() =>
+        history.push({
+          pathname: `/code/groups/${id}`,
+          state: { newCode: false },
+        })
+      }
+      key={id}
+    >
+      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemIcon>
+        <KeyboardArrowRightIcon className={classes.buttonSpacing} />
+      </ListItemIcon>
+    </ListItem>
+  ));
 
   return (
     <div className={classes.root}>
@@ -317,9 +373,9 @@ function Dashboard() {
         <div className={classes.toolbar} />
         {selectedIndex === 0 && <List>{docsList}</List>}
         {selectedIndex === 1 && <List>{sharedDocsList}</List>}
-        {/* TODO: @akshaymittur uncomment the below lines after creating routes and integrating with backend */}
-        {/* {selectedIndex === 2 && <List>{codesList}</List>} */}
-        {/* {selectedIndex === 3 && <List>{sharedCodesList}</List>} */}
+
+        {selectedIndex === 2 && <List>{codeList}</List>}
+        {selectedIndex === 3 && <List>{sharedCodeList}</List>}
       </main>
     </div>
   );
