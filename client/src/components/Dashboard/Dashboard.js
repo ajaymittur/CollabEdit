@@ -345,7 +345,7 @@ function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             classes={listClasses}
             button
             selected={selectedIndex === 2}
@@ -383,7 +383,7 @@ function Dashboard() {
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Code" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <main className={classes.content}>
