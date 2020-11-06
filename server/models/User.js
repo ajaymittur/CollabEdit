@@ -32,6 +32,12 @@ const UserSchema = mongoose.Schema({
       ref: "Docs",
     },
   ],
+  code: [
+    {
+      type: String,
+      ref: "Code",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", UserSchema);

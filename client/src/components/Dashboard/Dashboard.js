@@ -25,7 +25,13 @@ import AddIcon from "@material-ui/icons/Add";
 import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 import { v4 as uuidv4 } from "uuid";
 
-import { ENDPOINT, GETDOCS, GETSHAREDDOCS } from "../../routes/routes";
+import {
+  ENDPOINT,
+  GETDOCS,
+  GETSHAREDDOCS,
+  GETCODE,
+  GETSHAREDCODE,
+} from "../../routes/routes";
 
 const drawerWidth = 250;
 
@@ -87,6 +93,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Dashboard() {
+  document.title = "CollabEdit | Dashboard";
+
   const token = localStorage.getItem("token");
   const username = localStorage.getItem("username") || "User";
   const history = useHistory();
@@ -95,7 +103,11 @@ function Dashboard() {
   const [open, setOpen] = useState(false);
   const [docs, setDocs] = useState([]);
   const [sharedDocs, setSharedDocs] = useState([]);
-  const [drawerStyles, setDrawerStyles] = useState(classes.drawer + " " + classes.drawerClose);
+  const [code, setCode] = useState([]);
+  const [sharedCode, setSharedCode] = useState([]);
+  const [drawerStyles, setDrawerStyles] = useState(
+    classes.drawer + " " + classes.drawerClose
+  );
   const [paperStyles, setPaperStyles] = useState(classes.drawerClose);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -104,7 +116,6 @@ function Dashboard() {
       try {
         const myDocs = await axios.get(GETDOCS, {
           headers: { Authorization: `Bearer ${token}` },
-          data: { username: username },
         });
 
         if (!myDocs.data) throw Error(`Null response from ${GETDOCS}`);
@@ -112,11 +123,26 @@ function Dashboard() {
 
         const sharedDocs = await axios.get(GETSHAREDDOCS, {
           headers: { Authorization: `Bearer ${token}` },
-          data: { username: username },
         });
 
-        if (!sharedDocs.data) throw Error(`Null response from ${GETSHAREDDOCS}`);
+        if (!sharedDocs.data)
+          throw Error(`Null response from ${GETSHAREDDOCS}`);
         setSharedDocs(sharedDocs.data);
+
+        const myCode = await axios.get(GETCODE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!myCode.data) throw Error(`Null response from ${GETCODE}`);
+        setCode(myCode.data);
+
+        const sharedCode = await axios.get(GETSHAREDCODE, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!sharedCode.data)
+          throw Error(`Null response from ${GETSHAREDCODE}`);
+        setSharedCode(sharedCode.data);
       } catch (err) {
         console.error(err);
       }
@@ -139,11 +165,12 @@ function Dashboard() {
     localStorage.clear();
     history.push("/login");
   };
+
   const deleteDoc = async (id) => {
     try {
       const response = await axios.delete(`${ENDPOINT}/docs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username: username },
+        data: { username },
       });
       setDocs(response.data);
     } catch (err) {
@@ -158,8 +185,12 @@ function Dashboard() {
         <IconButton
           className={classes.buttonSpacing}
           onClick={() =>
-            history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })
-          }>
+            history.push({
+              pathname: `/docs/groups/${id}`,
+              state: { newDoc: false },
+            })
+          }
+        >
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -172,8 +203,14 @@ function Dashboard() {
   const sharedDocsList = sharedDocs.map(({ _id: id, title, created_on }) => (
     <ListItem
       button
-      onClick={() => history.push({ pathname: `/docs/groups/${id}`, state: { newDoc: false } })}
-      key={id}>
+      onClick={() =>
+        history.push({
+          pathname: `/docs/groups/${id}`,
+          state: { newDoc: false },
+        })
+      }
+      key={id}
+    >
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -181,9 +218,57 @@ function Dashboard() {
     </ListItem>
   ));
 
-  // TODO: @akshaymittur define these when integrating with backend to be used in lines 284 and 285
-  // const codesList = ...
-  // const sharedCodesList = ...
+  const deleteCode = async (id) => {
+    try {
+      const response = await axios.delete(`${ENDPOINT}/code/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        data: { username },
+      });
+      setCode(response.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const codeList = code.map(({ _id: id, title, created_on }) => (
+    <ListItem key={id}>
+      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemIcon>
+        <IconButton
+          className={classes.buttonSpacing}
+          onClick={() =>
+            history.push({
+              pathname: `/code/groups/${id}`,
+              state: { newCode: false },
+            })
+          }
+        >
+          <KeyboardArrowRightIcon />
+        </IconButton>
+        <IconButton color="secondary" onClick={() => deleteCode(id)}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemIcon>
+    </ListItem>
+  ));
+
+  const sharedCodeList = sharedCode.map(({ _id: id, title, created_on }) => (
+    <ListItem
+      button
+      onClick={() =>
+        history.push({
+          pathname: `/code/groups/${id}`,
+          state: { newCode: false },
+        })
+      }
+      key={id}
+    >
+      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemIcon>
+        <KeyboardArrowRightIcon className={classes.buttonSpacing} />
+      </ListItemIcon>
+    </ListItem>
+  ));
 
   return (
     <div className={classes.root}>
@@ -193,13 +278,18 @@ function Dashboard() {
             color="inherit"
             onClick={toggleOpen}
             edge="start"
-            className={classes.buttonSpacing}>
+            className={classes.buttonSpacing}
+          >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             {username}
           </Typography>
-          <Button color="inherit" startIcon={<ExitToAppIcon />} onClick={handleSignOut}>
+          <Button
+            color="inherit"
+            startIcon={<ExitToAppIcon />}
+            onClick={handleSignOut}
+          >
             Sign Out
           </Button>
         </Toolbar>
@@ -209,7 +299,8 @@ function Dashboard() {
         className={drawerStyles}
         classes={{
           paper: paperStyles,
-        }}>
+        }}
+      >
         <div className={classes.toolbar} />
         <Divider />
         <List>
@@ -217,9 +308,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 0}
-            onClick={(e) => setSelectedIndex(0)}>
+            onClick={(e) => setSelectedIndex(0)}
+          >
             <ListItemIcon>
-              <DescriptionIcon color={selectedIndex === 0 ? "primary" : "inherit"} />
+              <DescriptionIcon
+                color={selectedIndex === 0 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="My Docs" />
           </ListItem>
@@ -227,9 +321,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 1}
-            onClick={(e) => setSelectedIndex(1)}>
+            onClick={(e) => setSelectedIndex(1)}
+          >
             <ListItemIcon>
-              <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
+              <FolderSharedIcon
+                color={selectedIndex === 1 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="Docs Shared With Me" />
           </ListItem>
@@ -237,18 +334,23 @@ function Dashboard() {
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/docs/groups/${uuidv4()}`, state: { newDoc: true } })
-            }>
+              history.push({
+                pathname: `/docs/groups/${uuidv4()}`,
+                state: { newDoc: true },
+              })
+            }
+          >
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
-          <ListItem
+          {/* <ListItem
             classes={listClasses}
             button
             selected={selectedIndex === 2}
-            onClick={(e) => setSelectedIndex(2)}>
+            onClick={(e) => setSelectedIndex(2)}
+          >
             <ListItemIcon>
               <CodeIcon color={selectedIndex === 2 ? "primary" : "inherit"} />
             </ListItemIcon>
@@ -258,9 +360,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 3}
-            onClick={(e) => setSelectedIndex(3)}>
+            onClick={(e) => setSelectedIndex(3)}
+          >
             <ListItemIcon>
-              <FolderSharedIcon color={selectedIndex === 3 ? "primary" : "inherit"} />
+              <FolderSharedIcon
+                color={selectedIndex === 3 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="Codes Shared With Me" />
           </ListItem>
@@ -268,22 +373,26 @@ function Dashboard() {
             classes={listClasses}
             button
             onClick={() =>
-              history.push({ pathname: `/code/groups/${uuidv4()}`, state: { newDoc: true } })
-            }>
+              history.push({
+                pathname: `/code/groups/${uuidv4()}`,
+                state: { newCode: true },
+              })
+            }
+          >
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Code" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
         {selectedIndex === 0 && <List>{docsList}</List>}
         {selectedIndex === 1 && <List>{sharedDocsList}</List>}
-        {/* TODO: @akshaymittur uncomment the below lines after creating routes and integrating with backend */}
-        {/* {selectedIndex === 2 && <List>{codesList}</List>} */}
-        {/* {selectedIndex === 3 && <List>{sharedCodesList}</List>} */}
+
+        {selectedIndex === 2 && <List>{codeList}</List>}
+        {selectedIndex === 3 && <List>{sharedCodeList}</List>}
       </main>
     </div>
   );

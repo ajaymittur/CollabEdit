@@ -47,9 +47,14 @@ const getSingleDoc = async (req, res) => {
 
 const getDocs = async (req, res) => {
   const { username } = req.body;
+  console.log(username);
 
   const user = await User.findOne({ username });
-  const docs = await Docs.find({ _id: { $in: user.docs } }, "title created_on");
+
+  const docs = await Docs.find(
+    { _id: { $in: user.docs } },
+    "title created_on saved_on"
+  ).sort({ saved_on: "desc" });
 
   res.json(docs);
 };
@@ -61,7 +66,7 @@ const getSharedDocs = async (req, res) => {
   const userId = user._id;
   const sharedDocs = await Docs.find(
     { editors: userId, owner: { $ne: userId } },
-    "title created_on"
+    "title created_on saved_on"
   ).sort({ saved_on: "desc" });
 
   res.json(sharedDocs);

@@ -92,11 +92,11 @@ function SignUpForm(props) {
           username,
           password,
           email,
-          name,
         })
         .then((res) => {
-          console.log(res);
+          console.log(res.data);
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("username", res.data.username);
 
           history.push({
             pathname: "/dashboard", //Enter dashboard route here

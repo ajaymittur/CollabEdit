@@ -37,32 +37,35 @@ function CodeEditorPage() {
   const [readOnly, setReadOnly] = useState(true);
   const [openAdd, setOpenAdd] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
-  const [addEditor, setAddEditor] = useState();
-  const [removeEditor, setRemoveEditor] = useState();
+  const [addCodeEditor, setAddCodeEditor] = useState();
+  const [removeCodeEditor, setRemoveCodeEditor] = useState();
   const [error, setError] = useState();
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`${ENDPOINT}/code/${groupId}/editors`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const response = await axios.get(
+          `${ENDPOINT}/code/${groupId}/editors`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
         if (!response.data.includes(username)) setReadOnly(true);
         else setReadOnly(false);
       } catch (err) {
         console.error(err);
         setReadOnly(true);
       }
-      if (location.state.newDoc) setReadOnly(false);
+      if (location.state && location.state.newCode) setReadOnly(false);
     }
     fetchData();
   }, []);
 
-  const handleAddEditor = async () => {
+  const handleAddCodeEditor = async () => {
     try {
       await axios.post(
         `${ENDPOINT}/code/${groupId}/addEditor`,
-        { editor: addEditor },
+        { editor: addCodeEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -75,14 +78,14 @@ function CodeEditorPage() {
     }
   };
 
-  const handleRemoveEditor = async () => {
+  const handleRemoveCodeEditor = async () => {
     try {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
         url: `${ENDPOINT}/code/${groupId}/removeEditor`,
         data: {
-          editor: removeEditor,
+          editor: removeCodeEditor,
         },
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -101,7 +104,8 @@ function CodeEditorPage() {
           <Button
             color="inherit"
             startIcon={<ArrowBackIcon />}
-            onClick={() => history.push("/dashboard")}>
+            onClick={() => history.push("/dashboard")}
+          >
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
@@ -111,7 +115,8 @@ function CodeEditorPage() {
             color="inherit"
             startIcon={<AddIcon />}
             onClick={() => setOpenAdd(true)}
-            disabled={readOnly}>
+            disabled={readOnly}
+          >
             Editor
           </Button>
           <Dialog
@@ -119,17 +124,19 @@ function CodeEditorPage() {
             onClose={() => {
               setError(null);
               setOpenAdd(false);
-            }}>
+            }}
+          >
             <DialogTitle>Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To allow others with the link to edit, please enter the editor's username here.
+                To allow others with the link to edit, please enter the editor's
+                username here.
               </DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
                 label="Editor to Add"
-                onChange={(e) => setAddEditor(e.target.value)}
+                onChange={(e) => setAddCodeEditor(e.target.value)}
                 fullWidth
               />
               {error && <Alert severity="error">{error}</Alert>}
@@ -140,10 +147,11 @@ function CodeEditorPage() {
                   setError(null);
                   setOpenAdd(false);
                 }}
-                color="primary">
+                color="primary"
+              >
                 Cancel
               </Button>
-              <Button onClick={handleAddEditor} color="primary">
+              <Button onClick={handleAddCodeEditor} color="primary">
                 Add
               </Button>
             </DialogActions>
@@ -152,7 +160,8 @@ function CodeEditorPage() {
             color="inherit"
             startIcon={<RemoveIcon />}
             onClick={() => setOpenRemove(true)}
-            disabled={readOnly}>
+            disabled={readOnly}
+          >
             Editor
           </Button>
           <Dialog
@@ -160,18 +169,19 @@ function CodeEditorPage() {
             onClose={() => {
               setError(null);
               setOpenRemove(false);
-            }}>
+            }}
+          >
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To revoke an editor's permission to edit the doc, please enter the editor's username
-                here.
+                To revoke an editor's permission to edit the code, please enter
+                the editor's username here.
               </DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
                 label="Editor to Remove"
-                onChange={(e) => setRemoveEditor(e.target.value)}
+                onChange={(e) => setRemoveCodeEditor(e.target.value)}
                 fullWidth
               />
               {error && <Alert severity="error">{error}</Alert>}
@@ -182,10 +192,11 @@ function CodeEditorPage() {
                   setError(null);
                   setOpenRemove(false);
                 }}
-                color="primary">
+                color="primary"
+              >
                 Cancel
               </Button>
-              <Button onClick={handleRemoveEditor} color="primary">
+              <Button onClick={handleRemoveCodeEditor} color="primary">
                 Remove
               </Button>
             </DialogActions>
