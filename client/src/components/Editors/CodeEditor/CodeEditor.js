@@ -76,7 +76,7 @@ function CodeEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${ENDPOINT}/code/${groupId}`, {
+        const response = await axios.get(`/code/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {
@@ -187,7 +187,7 @@ function CodeEditor({ groupId, readOnly }) {
             title={title}
             value={value}
             language={language}
-            ENDPOINT={`${ENDPOINT}/code/${groupId}`}
+            ENDPOINT={`/code/${groupId}`}
             disabled={readOnly}
           />
         </EditorToolbar>

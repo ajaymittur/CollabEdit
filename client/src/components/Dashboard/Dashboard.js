@@ -168,9 +168,8 @@ function Dashboard() {
 
   const deleteDoc = async (id) => {
     try {
-      const response = await axios.delete(`${ENDPOINT}/docs/${id}`, {
+      const response = await axios.delete(`/docs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username },
       });
       setDocs(response.data);
     } catch (err) {
@@ -220,9 +219,8 @@ function Dashboard() {
 
   const deleteCode = async (id) => {
     try {
-      const response = await axios.delete(`${ENDPOINT}/code/${id}`, {
+      const response = await axios.delete(`/code/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username },
       });
       setCode(response.data);
     } catch (err) {
@@ -345,6 +343,7 @@ function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
+          {/* Removed for Presentation */}
           {/* <ListItem
             classes={listClasses}
             button

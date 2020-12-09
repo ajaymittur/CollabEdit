@@ -44,12 +44,9 @@ function TextEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(
-          `${ENDPOINT}/docs/${groupId}/editors`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get(`/docs/${groupId}/editors`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!response.data.includes(username)) setReadOnly(true);
         else setReadOnly(false);
       } catch (err) {
@@ -64,7 +61,7 @@ function TextEditor() {
   const handleAddEditor = async () => {
     try {
       await axios.post(
-        `${ENDPOINT}/docs/${groupId}/addEditor`,
+        `/docs/${groupId}/addEditor`,
         { editor: addEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +80,7 @@ function TextEditor() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: `${ENDPOINT}/docs/${groupId}/removeEditor`,
+        url: `/docs/${groupId}/removeEditor`,
         data: {
           editor: removeEditor,
         },

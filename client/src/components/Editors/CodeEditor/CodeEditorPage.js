@@ -44,12 +44,9 @@ function CodeEditorPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(
-          `${ENDPOINT}/code/${groupId}/editors`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const response = await axios.get(`/code/${groupId}/editors`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!response.data.includes(username)) setReadOnly(true);
         else setReadOnly(false);
       } catch (err) {
@@ -64,7 +61,7 @@ function CodeEditorPage() {
   const handleAddCodeEditor = async () => {
     try {
       await axios.post(
-        `${ENDPOINT}/code/${groupId}/addEditor`,
+        `/code/${groupId}/addEditor`,
         { editor: addCodeEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -83,7 +80,7 @@ function CodeEditorPage() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: `${ENDPOINT}/code/${groupId}/removeEditor`,
+        url: `/code/${groupId}/removeEditor`,
         data: {
           editor: removeCodeEditor,
         },

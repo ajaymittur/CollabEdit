@@ -5,6 +5,7 @@ import {
   Switch,
   Redirect,
 } from "react-router-dom";
+import axios from "axios";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import LoginForm from "./components/LoginForm/LoginForm";
@@ -33,6 +34,7 @@ function App() {
         <Route path="/docs/groups/:groupId">
           <TextEditor />
         </Route>
+        {/* Removed for Presentation */}
         <Route path="/code/groups/:groupId">{/* <CodeEditorPage /> */}</Route>
         <Route>
           <NotFound />
