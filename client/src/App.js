@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+} from "react-router-dom";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import LoginForm from "./components/LoginForm/LoginForm";
@@ -28,9 +33,7 @@ function App() {
         <Route path="/docs/groups/:groupId">
           <TextEditor />
         </Route>
-        <Route path="/code/groups/:groupId">
-          <CodeEditorPage />
-        </Route>
+        <Route path="/code/groups/:groupId">{/* <CodeEditorPage /> */}</Route>
         <Route>
           <NotFound />
         </Route>
