@@ -26,12 +26,11 @@ import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter"
 import { v4 as uuidv4 } from "uuid";
 
 import {
+  ENDPOINT,
   GETDOCS,
   GETSHAREDDOCS,
   GETCODE,
   GETSHAREDCODE,
-  DELETEDOC,
-  DELETECODE,
 } from "../../routes/routes";
 
 const drawerWidth = 250;
@@ -169,7 +168,7 @@ function Dashboard() {
 
   const deleteDoc = async (id) => {
     try {
-      const response = await axios.delete(DELETEDOC, {
+      const response = await axios.delete(`/docs/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDocs(response.data);
@@ -220,7 +219,7 @@ function Dashboard() {
 
   const deleteCode = async (id) => {
     try {
-      const response = await axios.delete(DELETECODE, {
+      const response = await axios.delete(`/code/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setCode(response.data);
@@ -344,7 +343,8 @@ function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
-          <ListItem
+          {/* Removed for Presentation */}
+          {/* <ListItem
             classes={listClasses}
             button
             selected={selectedIndex === 2}
@@ -382,7 +382,7 @@ function Dashboard() {
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Code" />
-          </ListItem>
+          </ListItem> */}
         </List>
       </Drawer>
       <main className={classes.content}>

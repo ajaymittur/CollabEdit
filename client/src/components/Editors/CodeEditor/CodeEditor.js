@@ -21,7 +21,7 @@ import {
 import { css } from "emotion";
 import io from "socket.io-client";
 import "./prism.css";
-import { ENDPOINT, GETCODES } from "../../../routes/routes";
+import { ENDPOINT } from "../../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,11 +42,11 @@ const initialValue = [
   },
 ];
 
+const languages = ["javascript", "python", "c"];
+
 let socket = undefined;
 
 function CodeEditor({ groupId, readOnly }) {
-  const GETCODE = `/code/${groupId}`;
-
   const savedValue = JSON.parse(localStorage.getItem("content"));
   const savedLanguage = localStorage.getItem("language");
   const savedTitle = localStorage.getItem("title");
@@ -76,7 +76,7 @@ function CodeEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(GETCODE, {
+        const response = await axios.get(`/code/${groupId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {

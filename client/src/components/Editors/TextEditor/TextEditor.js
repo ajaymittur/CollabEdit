@@ -18,7 +18,7 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 
 import RichTextEditor from "./RichTextEditor";
-import { GETEDITORS, ADDEDITOR, REMOVEEDITOR } from "../../../routes";
+import { ENDPOINT } from "../../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -44,7 +44,7 @@ function TextEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(GETEDITORS, {
+        const response = await axios.get(`/docs/${groupId}/editors`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.data.includes(username)) setReadOnly(true);
@@ -61,7 +61,7 @@ function TextEditor() {
   const handleAddEditor = async () => {
     try {
       await axios.post(
-        ADDEDITOR,
+        `/docs/${groupId}/addEditor`,
         { editor: addEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -80,7 +80,7 @@ function TextEditor() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: REMOVEEDITOR,
+        url: `/docs/${groupId}/removeEditor`,
         data: {
           editor: removeEditor,
         },
