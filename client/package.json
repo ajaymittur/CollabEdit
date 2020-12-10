@@ -14,6 +14,7 @@
     "emotion": "^10.0.27",
     "is-hotkey": "^0.1.6",
     "is-url": "^1.2.4",
+    "particles-bg": "^2.5.0",
     "prismjs": "^1.22.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
