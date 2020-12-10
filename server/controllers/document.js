@@ -73,7 +73,6 @@ const getSharedDocs = async (req, res) => {
 };
 
 const deleteDoc = async (req, res) => {
-  console.log(req.body);
   const { username } = req.body;
   const { groupId } = req.params;
 
