@@ -1,0 +1,21 @@
+{
+  "name": "collabedit",
+  "version": "1.0.0",
+  "description": "Collaborative Realtime Editor",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd server && npm start",
+    "build": "cd client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaymittur28/CollabEdit.git"
+  },
+  "author": "Ajay Mittur, Akshay Mittur",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajaymittur28/CollabEdit/issues"
+  },
+  "homepage": "https://github.com/ajaymittur28/CollabEdit#readme"
+}
