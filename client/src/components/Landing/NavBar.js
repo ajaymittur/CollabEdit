@@ -44,7 +44,7 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar position="fixed">
         <Toolbar>
-          <img src={logo} alt="logo" className={classes.logo} />
+          <img src={logo} style={{marginRight: "5px"}} alt="logo" className={classes.logo} />
           <Typography variant="h6" className={classes.title}>
             CollabEdit
           </Typography>
