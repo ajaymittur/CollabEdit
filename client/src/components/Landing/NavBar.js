@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     '& > *': {
-    margin: theme.spacing(1),
+    margin: theme.spacing(0),
     flexGrow: 1,
   },
 },
@@ -42,7 +42,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <img src={logo} alt="logo" className={classes.logo} />
           <Typography variant="h6" className={classes.title}>
