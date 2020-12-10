@@ -40,6 +40,8 @@ function RichTextEditor({ groupId, readOnly }) {
     []
   );
 
+  const GETSINGLEDOC = `/docs/${groupId}`;
+
   useEffect(() => {
     socket = io(ENDPOINT);
 
@@ -55,7 +57,7 @@ function RichTextEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`/docs/${groupId}`, {
+        const response = await axios.get(GETSINGLEDOC, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {
