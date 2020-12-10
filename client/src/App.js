@@ -8,14 +8,14 @@ import NotFound from "./components/NotFound/NotFound";
 import TextEditor from "./components/Editors/TextEditor/TextEditor";
 import CodeEditorPage from "./components/Editors/CodeEditor/CodeEditorPage";
 import Dashboard from "./components/Dashboard/Dashboard";
-
+import LandingPage from "./components/Landing/LandingPage";
 function App() {
   return (
     <Router>
       <Switch>
-        <ProtectedRoute exact path="/">
-          <Redirect to="/dashboard" />
-        </ProtectedRoute>
+        <Route exact path="/">
+          <LandingPage />
+        </Route>
         <Route path="/login">
           <LoginForm />
         </Route>
