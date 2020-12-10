@@ -42,8 +42,6 @@ const initialValue = [
   },
 ];
 
-const languages = ["javascript", "python", "c"];
-
 let socket = undefined;
 
 function CodeEditor({ groupId, readOnly }) {
@@ -56,6 +54,8 @@ function CodeEditor({ groupId, readOnly }) {
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
+
+  const GETSINGLECODE = `/code/${groupId}`;
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -76,7 +76,7 @@ function CodeEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${ENDPOINT}/code/${groupId}`, {
+        const response = await axios.get(GETSINGLECODE, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {
@@ -187,7 +187,7 @@ function CodeEditor({ groupId, readOnly }) {
             title={title}
             value={value}
             language={language}
-            ENDPOINT={`${ENDPOINT}/code/${groupId}`}
+            ENDPOINT={`/code/${groupId}`}
             disabled={readOnly}
           />
         </EditorToolbar>
@@ -197,7 +197,7 @@ function CodeEditor({ groupId, readOnly }) {
           placeholder="Start writing..."
           readOnly={readOnly}
           onKeyDown={(event) => {
-            if (event.key == "Tab") {
+            if (event.key === "Tab") {
               event.preventDefault();
               editor.insertText("    ");
               return;

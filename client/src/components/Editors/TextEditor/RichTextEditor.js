@@ -35,7 +35,12 @@ function RichTextEditor({ groupId, readOnly }) {
   const [title, setTitle] = useState(savedTitle || groupId);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
+  const editor = useMemo(
+    () => withLinks(withHistory(withReact(createEditor()))),
+    []
+  );
+
+  const GETSINGLEDOC = `/docs/${groupId}`;
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -52,7 +57,7 @@ function RichTextEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${ENDPOINT}/docs/${groupId}`, {
+        const response = await axios.get(GETSINGLEDOC, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {
@@ -122,7 +127,7 @@ function RichTextEditor({ groupId, readOnly }) {
         <EditorSaveButton
           title={title}
           value={value}
-          ENDPOINT={`${ENDPOINT}/docs/${groupId}`}
+          ENDPOINT={`/docs/${groupId}`}
           disabled={readOnly}
         />
       </EditorToolbar>
@@ -257,7 +262,10 @@ const Element = ({ attributes, children, element }) => {
   switch (element.type) {
     case "block-quote":
       return (
-        <blockquote {...attributes} style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}>
+        <blockquote
+          {...attributes}
+          style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}
+        >
           {children}
         </blockquote>
       );
