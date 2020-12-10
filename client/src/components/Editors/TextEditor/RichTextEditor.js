@@ -29,6 +29,8 @@ const LIST_TYPES = ["numbered-list", "bulleted-list"];
 let socket = undefined;
 
 function RichTextEditor({ groupId, readOnly }) {
+  const GETDOC = `/docs/${groupId}`;
+
   const savedValue = JSON.parse(localStorage.getItem("content"));
   const savedTitle = localStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
@@ -55,7 +57,7 @@ function RichTextEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`/docs/${groupId}`, {
+        const response = await axios.get(GETDOC, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {

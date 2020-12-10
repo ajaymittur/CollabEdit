@@ -18,7 +18,6 @@ import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert";
 
 import CodeEditor from "./CodeEditor";
-import { ENDPOINT } from "../../../routes/routes";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -28,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function CodeEditorPage() {
+  const GETCODEEDITORS = `/code/${groupId}/editors`;
+  const ADDCODEEDITOR = `/code/${groupId}/addEditor`;
+  const REMOVECODEEDITOR = `/code/${groupId}/removeEditor`;
+
   const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
   const { groupId } = useParams();
@@ -44,7 +47,7 @@ function CodeEditorPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`/code/${groupId}/editors`, {
+        const response = await axios.get(GETCODEEDITORS, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.data.includes(username)) setReadOnly(true);
@@ -61,7 +64,7 @@ function CodeEditorPage() {
   const handleAddCodeEditor = async () => {
     try {
       await axios.post(
-        `/code/${groupId}/addEditor`,
+        ADDCODEEDITOR,
         { editor: addCodeEditor },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -80,7 +83,7 @@ function CodeEditorPage() {
       // for some reason the axios delete alias (axios.delete) doesn't pass {data: {editor: removeEditor}} to the body
       await axios({
         method: "delete",
-        url: `/code/${groupId}/removeEditor`,
+        url: REMOVECODEEDITOR,
         data: {
           editor: removeCodeEditor,
         },
