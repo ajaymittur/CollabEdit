@@ -18,6 +18,8 @@ app.use(express.static(path.join(__dirname, "/build")));
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 
+const PORT = process.env.PORT || 4000;
+
 io.on("connection", (socket) => {
   console.log("a user connected");
 
@@ -120,6 +122,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
-http.listen(process.env.PORT || 4000, () => {
-  console.log("Listening on Port 4000");
+http.listen(PORT, () => {
+  console.log(`Listening on Port ${PORT}`);
 });
