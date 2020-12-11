@@ -12,12 +12,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import {
-  EditorPaper,
-  EditorSaveButton,
-  EditorTitle,
-  EditorToolbar,
-} from "../EditorComponents";
+import { EditorPaper, EditorSaveButton, EditorTitle, EditorToolbar } from "../EditorComponents";
 import { css } from "emotion";
 import io from "socket.io-client";
 import "./prism.css";
@@ -88,7 +83,7 @@ function CodeEditor({ groupId, readOnly }) {
         console.error(err);
       }
     }
-    fetchData();
+    if (!savedValue) fetchData();
 
     return () => {
       localStorage.removeItem("title");
@@ -153,12 +148,7 @@ function CodeEditor({ groupId, readOnly }) {
 
   return (
     <>
-      <Slate
-        editor={editor}
-        value={value}
-        onChange={handleValueChange}
-        className={classes.color}
-      >
+      <Slate editor={editor} value={value} onChange={handleValueChange} className={classes.color}>
         <EditorToolbar>
           <Select
             classes={{
@@ -169,8 +159,7 @@ function CodeEditor({ groupId, readOnly }) {
             id="langSelect"
             value={language}
             readOnly={readOnly}
-            onChange={(e) => handleLanguageChange(e.target.value)}
-          >
+            onChange={(e) => handleLanguageChange(e.target.value)}>
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
             <MenuItem value="c">C/C++</MenuItem>
@@ -266,8 +255,7 @@ const Leaf = ({ attributes, children, leaf }) => {
         css`
           color: #dd4a68;
         `}
-      `}
-    >
+      `}>
       {children}
     </span>
   );

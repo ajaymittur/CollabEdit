@@ -35,10 +35,7 @@ function RichTextEditor({ groupId, readOnly }) {
   const [title, setTitle] = useState(savedTitle || groupId);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(
-    () => withLinks(withHistory(withReact(createEditor()))),
-    []
-  );
+  const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
 
   const GETSINGLEDOC = `/docs/${groupId}`;
 
@@ -68,7 +65,7 @@ function RichTextEditor({ groupId, readOnly }) {
         console.error(err);
       }
     }
-    fetchData();
+    if (!savedValue) fetchData();
 
     return () => {
       localStorage.removeItem("title");
@@ -262,10 +259,7 @@ const Element = ({ attributes, children, element }) => {
   switch (element.type) {
     case "block-quote":
       return (
-        <blockquote
-          {...attributes}
-          style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}
-        >
+        <blockquote {...attributes} style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}>
           {children}
         </blockquote>
       );
