@@ -49,7 +49,7 @@ const EditorSaveButton = ({ title, value, ENDPOINT, disabled, ...props }) => {
 
   const handleSave = async () => {
     setSaving(true);
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     await axios.put(
       ENDPOINT,
       {

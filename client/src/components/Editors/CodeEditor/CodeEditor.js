@@ -40,9 +40,9 @@ const initialValue = [
 let socket = undefined;
 
 function CodeEditor({ groupId, readOnly }) {
-  const savedValue = JSON.parse(localStorage.getItem("content"));
-  const savedLanguage = localStorage.getItem("language");
-  const savedTitle = localStorage.getItem("title");
+  const savedValue = JSON.parse(sessionStorage.getItem("content"));
+  const savedLanguage = sessionStorage.getItem("language");
+  const savedTitle = sessionStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
   const [language, setLanguage] = useState(savedLanguage || "javascript");
@@ -70,7 +70,7 @@ function CodeEditor({ groupId, readOnly }) {
 
     async function fetchData() {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const response = await axios.get(GETSINGLECODE, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -86,18 +86,18 @@ function CodeEditor({ groupId, readOnly }) {
     if (!savedValue) fetchData();
 
     return () => {
-      localStorage.removeItem("title");
-      localStorage.removeItem("content");
-      localStorage.removeItem("language");
+      sessionStorage.removeItem("title");
+      sessionStorage.removeItem("content");
+      sessionStorage.removeItem("language");
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
     const autoSave = setTimeout(() => {
-      localStorage.setItem("content", JSON.stringify(value));
-      localStorage.setItem("title", title);
-      localStorage.setItem("language", language);
+      sessionStorage.setItem("content", JSON.stringify(value));
+      sessionStorage.setItem("title", title);
+      sessionStorage.setItem("language", language);
     }, 3000);
 
     return () => clearTimeout(autoSave);

@@ -92,8 +92,8 @@ function LoginForm() {
           password,
         })
         .then((res) => {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("username", res.data.username);
+          sessionStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("username", res.data.username);
 
           history.push("/dashboard");
         })

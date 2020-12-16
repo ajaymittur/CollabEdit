@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 const isAuthenticated = () => {
-  if (localStorage.getItem("token") !== null) return true;
+  if (sessionStorage.getItem("token") !== null) return true;
   else return false;
 };
 
