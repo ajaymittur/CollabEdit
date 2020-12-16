@@ -2,6 +2,7 @@ import axios from "axios";
 import isHotkey from "is-hotkey";
 import isUrl from "is-url";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import Button from "@material-ui/core/Button";
 import { createEditor, Editor, Range, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import { Slate, useSlate, withReact } from "slate-react";
@@ -33,6 +34,7 @@ function RichTextEditor({ groupId, readOnly }) {
   const savedTitle = localStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
+  const [copyStatus, setCopyStatus] = useState("Copy Invite Code");
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(
@@ -95,6 +97,10 @@ function RichTextEditor({ groupId, readOnly }) {
     setTitle(title);
     socket.emit("new-doc-title", groupId, title);
   };
+  const handleCopyClipboard = () => {
+    navigator.clipboard.writeText(groupId);
+    setCopyStatus("Copied!");
+  };
 
   return (
     <Slate editor={editor} value={value} onChange={handleValueChange}>
@@ -124,6 +130,14 @@ function RichTextEditor({ groupId, readOnly }) {
           disabled={readOnly}
           handleChange={handleTitleChange}
         />
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ width: "15%", marginRight: "1%" }}
+          onClick={() => handleCopyClipboard()}
+        >
+          {copyStatus}
+        </Button>
         <EditorSaveButton
           title={title}
           value={value}
