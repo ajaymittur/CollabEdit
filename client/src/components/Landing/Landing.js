@@ -10,7 +10,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
+import {Link} from 'react-router-dom';
 import logo from "./assets/icon5CollabEditLogo.png";
 import logo1 from "./assets/icon1people.png";
 import logo2 from "./assets/icon2texteditor.png";
