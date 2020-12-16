@@ -101,7 +101,7 @@ function Landing() {
               <Grid container spacing={2} justify="center">
                 <Grid item>
                   <Button variant="contained" color="primary" style={{color: 'white'}} component={Link} to="/login">
-                    Login
+                    Sign in
                   </Button>
                 </Grid>
                 <Grid item>
@@ -139,11 +139,9 @@ function Landing() {
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
       <footer className={classes.footer}>
         <Copyright />
       </footer>
-      {/* End footer */}
     </React.Fragment>
   );
 }
