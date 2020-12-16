@@ -78,7 +78,6 @@ const desc = [
   "Documents on the cloud can be accessed by the collaborators from any part of the world",
 ];
 const head = ["Collaborate", "Code", "Cloud"];
-
 function Landing() {
   const classes = useStyles();
 

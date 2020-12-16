@@ -37,6 +37,8 @@ function RichTextEditor({ groupId, readOnly }) {
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
 
+  const GETSINGLEDOC = `/docs/${groupId}`;
+
   useEffect(() => {
     socket = io(ENDPOINT);
 
@@ -52,7 +54,7 @@ function RichTextEditor({ groupId, readOnly }) {
     async function fetchData() {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`${ENDPOINT}/docs/${groupId}`, {
+        const response = await axios.get(GETSINGLEDOC, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (response) {
@@ -63,7 +65,7 @@ function RichTextEditor({ groupId, readOnly }) {
         console.error(err);
       }
     }
-    fetchData();
+    if (!savedValue) fetchData();
 
     return () => {
       localStorage.removeItem("title");
@@ -122,7 +124,7 @@ function RichTextEditor({ groupId, readOnly }) {
         <EditorSaveButton
           title={title}
           value={value}
-          ENDPOINT={`${ENDPOINT}/docs/${groupId}`}
+          ENDPOINT={`/docs/${groupId}`}
           disabled={readOnly}
         />
       </EditorToolbar>

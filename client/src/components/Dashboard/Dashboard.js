@@ -15,7 +15,6 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
-import CodeIcon from "@material-ui/icons/Code";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FolderSharedIcon from "@material-ui/icons/FolderShared";
@@ -26,7 +25,6 @@ import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter"
 import { v4 as uuidv4 } from "uuid";
 
 import {
-  ENDPOINT,
   GETDOCS,
   GETSHAREDDOCS,
   GETCODE,
@@ -167,10 +165,10 @@ function Dashboard() {
   };
 
   const deleteDoc = async (id) => {
+    const DELETEDOC = `/docs/${id}`;
     try {
-      const response = await axios.delete(`${ENDPOINT}/docs/${id}`, {
+      const response = await axios.delete(DELETEDOC, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username },
       });
       setDocs(response.data);
     } catch (err) {
@@ -219,10 +217,10 @@ function Dashboard() {
   ));
 
   const deleteCode = async (id) => {
+    const DELETECODE = `/code/${id}`;
     try {
-      const response = await axios.delete(`${ENDPOINT}/code/${id}`, {
+      const response = await axios.delete(DELETECODE, {
         headers: { Authorization: `Bearer ${token}` },
-        data: { username },
       });
       setCode(response.data);
     } catch (err) {
@@ -345,6 +343,7 @@ function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
+          {/* Removed for Presentation */}
           {/* <ListItem
             classes={listClasses}
             button
