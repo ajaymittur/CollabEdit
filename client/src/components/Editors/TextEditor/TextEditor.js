@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TextEditor() {
-  const username = localStorage.getItem("username") || "User";
-  const token = localStorage.getItem("token");
+  const username = sessionStorage.getItem("username") || "User";
+  const token = sessionStorage.getItem("token");
   const { groupId } = useParams();
   const history = useHistory();
   const location = useLocation();
@@ -104,8 +104,7 @@ function TextEditor() {
           <Button
             color="inherit"
             startIcon={<ArrowBackIcon />}
-            onClick={() => history.push("/dashboard")}
-          >
+            onClick={() => history.push("/dashboard")}>
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
@@ -115,8 +114,7 @@ function TextEditor() {
             color="inherit"
             startIcon={<AddIcon />}
             onClick={() => setOpenAdd(true)}
-            disabled={readOnly}
-          >
+            disabled={readOnly}>
             Editor
           </Button>
           <Dialog
@@ -124,13 +122,11 @@ function TextEditor() {
             onClose={() => {
               setError(null);
               setOpenAdd(false);
-            }}
-          >
+            }}>
             <DialogTitle>Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To allow others with the link to edit, please enter the editor's
-                username here.
+                To allow others with the link to edit, please enter the editor's username here.
               </DialogContentText>
               <TextField
                 autoFocus
@@ -147,8 +143,7 @@ function TextEditor() {
                   setError(null);
                   setOpenAdd(false);
                 }}
-                color="primary"
-              >
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleAddEditor} color="primary">
@@ -160,8 +155,7 @@ function TextEditor() {
             color="inherit"
             startIcon={<RemoveIcon />}
             onClick={() => setOpenRemove(true)}
-            disabled={readOnly}
-          >
+            disabled={readOnly}>
             Editor
           </Button>
           <Dialog
@@ -169,13 +163,12 @@ function TextEditor() {
             onClose={() => {
               setError(null);
               setOpenRemove(false);
-            }}
-          >
+            }}>
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                To revoke an editor's permission to edit the doc, please enter
-                the editor's username here.
+                To revoke an editor's permission to edit the doc, please enter the editor's username
+                here.
               </DialogContentText>
               <TextField
                 autoFocus
@@ -192,8 +185,7 @@ function TextEditor() {
                   setError(null);
                   setOpenRemove(false);
                 }}
-                color="primary"
-              >
+                color="primary">
                 Cancel
               </Button>
               <Button onClick={handleRemoveEditor} color="primary">

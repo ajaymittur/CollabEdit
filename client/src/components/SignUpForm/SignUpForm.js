@@ -80,8 +80,7 @@ function SignUpForm(props) {
     if (!email || !password || !repassword || !name || !username)
       error.fill = "Make sure you fill in all the fields";
 
-    if (password.length < 8)
-      error.pass = "Password should be atleast 8 characters in length";
+    if (password.length < 8) error.pass = "Password should be atleast 8 characters in length";
 
     setErrors(error);
 
@@ -95,8 +94,8 @@ function SignUpForm(props) {
         })
         .then((res) => {
           console.log(res.data);
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("username", res.data.username);
+          sessionStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("username", res.data.username);
 
           history.push({
             pathname: "/dashboard", //Enter dashboard route here
@@ -193,8 +192,7 @@ function SignUpForm(props) {
             color="primary"
             className={classes.submit}
             endIcon={<ExitToAppIcon />}
-            onClick={handleSubmit}
-          >
+            onClick={handleSubmit}>
             Sign Up
           </Button>
           <Grid container justify="flex-end">
@@ -208,9 +206,7 @@ function SignUpForm(props) {
                 <AlertTitle>Error</AlertTitle>
                 There were some errors with your submission <br></br>
                 <strong>
-                  {Object.keys(errors).map(
-                    (key, index) => `${index + 1}) ` + errors[key] + " "
-                  )}
+                  {Object.keys(errors).map((key, index) => `${index + 1}) ` + errors[key] + " ")}
                   <br></br>
                 </strong>
               </Alert>

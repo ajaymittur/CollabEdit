@@ -30,8 +30,8 @@ const LIST_TYPES = ["numbered-list", "bulleted-list"];
 let socket = undefined;
 
 function RichTextEditor({ groupId, readOnly }) {
-  const savedValue = JSON.parse(localStorage.getItem("content"));
-  const savedTitle = localStorage.getItem("title");
+  const savedValue = JSON.parse(sessionStorage.getItem("content"));
+  const savedTitle = sessionStorage.getItem("title");
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
   const [copyStatus, setCopyStatus] = useState("Copy Invite Code");
@@ -55,7 +55,7 @@ function RichTextEditor({ groupId, readOnly }) {
 
     async function fetchData() {
       try {
-        const token = localStorage.getItem("token");
+        const token = sessionStorage.getItem("token");
         const response = await axios.get(GETSINGLEDOC, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -70,16 +70,16 @@ function RichTextEditor({ groupId, readOnly }) {
     if (!savedValue) fetchData();
 
     return () => {
-      localStorage.removeItem("title");
-      localStorage.removeItem("content");
+      sessionStorage.removeItem("title");
+      sessionStorage.removeItem("content");
       socket.disconnect();
     };
   }, []);
 
   useEffect(() => {
     const autoSave = setTimeout(() => {
-      localStorage.setItem("content", JSON.stringify(value));
-      localStorage.setItem("title", title);
+      sessionStorage.setItem("content", JSON.stringify(value));
+      sessionStorage.setItem("title", title);
     }, 3000);
 
     return () => clearTimeout(autoSave);
