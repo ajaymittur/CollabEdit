@@ -17,10 +17,14 @@ import ListItemText from "@material-ui/core/ListItemText";
 import IconButton from "@material-ui/core/IconButton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import DescriptionIcon from "@material-ui/icons/Description";
+import CodeIcon from "@material-ui/icons/Code";
 import FolderSharedIcon from "@material-ui/icons/FolderShared";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/Add";
+import Link from "@material-ui/core/Link";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
 import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 import { v4 as uuidv4 } from "uuid";
 
@@ -103,6 +107,7 @@ function Dashboard() {
   const [sharedDocs, setSharedDocs] = useState([]);
   const [code, setCode] = useState([]);
   const [sharedCode, setSharedCode] = useState([]);
+  const [inviteCode, setInviteCode] = useState("");
   const [drawerStyles, setDrawerStyles] = useState(
     classes.drawer + " " + classes.drawerClose
   );
@@ -227,6 +232,10 @@ function Dashboard() {
       console.error(err);
     }
   };
+  const handleInvite = () => {
+    if (selectedIndex === 0) history.push(`/docs/groups/${inviteCode}`);
+    else history.push(`/code/groups/${inviteCode}`);
+  };
 
   const codeList = code.map(({ _id: id, title, created_on }) => (
     <ListItem key={id}>
@@ -343,8 +352,7 @@ function Dashboard() {
             </ListItemIcon>
             <ListItemText primary="Create New Doc" />
           </ListItem>
-          {/* Removed for Presentation */}
-          {/* <ListItem
+          <ListItem
             classes={listClasses}
             button
             selected={selectedIndex === 2}
@@ -382,11 +390,40 @@ function Dashboard() {
               <AddIcon color="secondary" />
             </ListItemIcon>
             <ListItemText primary="Create New Code" />
-          </ListItem> */}
+          </ListItem>
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <form className={classes.form} noValidate>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                autoComplete="invitecode"
+                name="inviteCode"
+                variant="outlined"
+                required
+                fullWidth
+                id="inviteCode"
+                label="Invite Code"
+                autoFocus
+                onChange={(e) => setInviteCode(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                style={{ width: "20%", height: "100%" }}
+                onClick={() => handleInvite()}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
         {selectedIndex === 0 && <List>{docsList}</List>}
         {selectedIndex === 1 && <List>{sharedDocsList}</List>}
 

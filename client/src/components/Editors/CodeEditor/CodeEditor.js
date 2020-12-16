@@ -12,6 +12,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import Button from "@material-ui/core/Button";
 import {
   EditorPaper,
   EditorSaveButton,
@@ -51,6 +52,7 @@ function CodeEditor({ groupId, readOnly }) {
   const [value, setValue] = useState(savedValue || initialValue);
   const [title, setTitle] = useState(savedTitle || groupId);
   const [language, setLanguage] = useState(savedLanguage || "javascript");
+  const [copyStatus, setCopyStatus] = useState("Copy Invite Code");
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
   const classes = useStyles();
@@ -151,6 +153,11 @@ function CodeEditor({ groupId, readOnly }) {
     [language]
   );
 
+  const handleCopyClipboard = () => {
+    navigator.clipboard.writeText(groupId);
+    setCopyStatus("Copied!");
+  };
+
   return (
     <>
       <Slate
@@ -183,6 +190,14 @@ function CodeEditor({ groupId, readOnly }) {
             disabled={readOnly}
             handleChange={handleTitleChange}
           />
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: "15%", marginRight: "1%" }}
+            onClick={() => handleCopyClipboard()}
+          >
+            {copyStatus}
+          </Button>
           <EditorSaveButton
             title={title}
             value={value}
