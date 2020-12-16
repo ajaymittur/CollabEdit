@@ -1,9 +1,7 @@
 import React from "react";
-import NavBar from "./NavBar";
+import Landing from "./Landing";
 import "./styles.css";
 import { withRouter } from "react-router-dom";
-import Body from "./Body";
-import Details from "./Details";
 import Animation from "./Animation";
 
 function LandingPage() {
@@ -11,10 +9,8 @@ function LandingPage() {
   
     return (
       <div>
-        <NavBar />
+        <Landing />
         <Animation />
-        <Details />
-        <Body />
       </div>
     );
   }
