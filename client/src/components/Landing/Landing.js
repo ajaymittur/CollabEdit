@@ -83,7 +83,9 @@ function Landing() {
       <CssBaseline />
       <AppBar position="relative">
         <Toolbar>
-          <img src={logo} style={{marginRight: "10px"}} alt="logo" className={classes.logo} component={Link} to="/"/>
+          <Link href="/">
+            <img src={logo} style={{marginRight: "10px"}} alt="logo" className={classes.logo}/>
+          </Link>
         </Toolbar>
       </AppBar>
       <main>
