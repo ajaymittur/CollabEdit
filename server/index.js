@@ -23,24 +23,28 @@ const PORT = process.env.PORT || 4000;
 io.on("connection", (socket) => {
   console.log("a user connected");
 
+  socket.on("join", (groupId) => {
+    socket.join(groupId);
+  });
+
   socket.on("new-doc-value", (groupId, newValue) => {
-    socket.broadcast.emit(`new-doc-value-${groupId}`, newValue);
+    socket.to(groupId).broadcast.emit("new-doc-value", newValue);
   });
 
   socket.on("new-doc-title", (groupId, newTitle) => {
-    socket.broadcast.emit(`new-doc-title-${groupId}`, newTitle);
+    socket.to(groupId).broadcast.emit("new-doc-title", newTitle);
   });
 
   socket.on("new-code-value", (groupId, newValue) => {
-    socket.broadcast.emit(`new-code-value-${groupId}`, newValue);
+    socket.to(groupId).broadcast.emit("new-code-value", newValue);
   });
 
   socket.on("new-code-title", (groupId, newTitle) => {
-    socket.broadcast.emit(`new-code-title-${groupId}`, newTitle);
+    socket.to(groupId).broadcast.emit("new-code-title", newTitle);
   });
 
   socket.on("new-code-language", (groupId, newLanguage) => {
-    socket.broadcast.emit(`new-code-language-${groupId}`, newLanguage);
+    socket.to(groupId).broadcast.emit("new-code-language", newLanguage);
   });
 
   socket.on("disconnect", () => {
