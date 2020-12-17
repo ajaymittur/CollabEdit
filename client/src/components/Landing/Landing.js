@@ -14,7 +14,6 @@ import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import logo from "./assets/icon5CollabEditLogo.png";
@@ -26,7 +25,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="http://localhost:3000/">
+      <Link color="inherit" to="/">
         CollabEdit
       </Link>{" "}
       {new Date().getFullYear()}
