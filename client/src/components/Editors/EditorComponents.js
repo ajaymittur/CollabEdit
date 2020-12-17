@@ -153,6 +153,7 @@ const EditorCopyButton = ({ ...props }) => {
       variant="contained"
       color="primary"
       style={{ width: "15%", marginRight: "1%" }}
+      disabled={props.disabled}
       onClick={() => props.handleCopyClipboard()}
     >
       {props.copyStatus}
