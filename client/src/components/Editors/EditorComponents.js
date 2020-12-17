@@ -18,6 +18,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "10px 20px",
+    borderRadius: "10px",
   },
   drawerPaper: {
     width: 80,
@@ -38,11 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditorButton = ({ active, icon, disabled, ...props }) => (
-  <Button
-    color={active ? "secondary" : "inherit"}
-    disabled={disabled}
-    {...props}
-  >
+  <Button color={active ? "secondary" : "inherit"} disabled={disabled} {...props}>
     <Icon>{icon}</Icon>
   </Button>
 );
@@ -74,8 +71,7 @@ const EditorSaveButton = ({ title, value, ENDPOINT, disabled, ...props }) => {
         startIcon={<Icon>save</Icon>}
         onClick={handleSave}
         className={classes.saveButton}
-        disabled={disabled}
-      >
+        disabled={disabled}>
         Save
       </Button>
     );
@@ -102,18 +98,11 @@ const EditorLinkButton = ({ active, editor, toggleLink, icon, disabled }) => {
       <Button
         color={active ? "secondary" : "inherit"}
         onMouseDown={() => setSelection(editor.selection)}
-        onClick={() =>
-          active ? toggleLink(editor, url, active) : setOpen(true)
-        }
-        disabled={disabled}
-      >
+        onClick={() => (active ? toggleLink(editor, url, active) : setOpen(true))}
+        disabled={disabled}>
         <Icon>{icon}</Icon>
       </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogContent>
           <TextField
             autoFocus
@@ -160,11 +149,7 @@ const EditorToolbar = ({ children }) => {
     <AppBar position="sticky">
       <Toolbar variant="dense">
         <Hidden smUp>
-          <Button
-            color="inherit"
-            onClick={handleDrawerToggle}
-            startIcon={<Icon>edit</Icon>}
-          >
+          <Button color="inherit" onClick={handleDrawerToggle} startIcon={<Icon>edit</Icon>}>
             Format
           </Button>
           <Drawer
@@ -174,8 +159,7 @@ const EditorToolbar = ({ children }) => {
             PaperProps={{ square: false }}
             classes={{
               paper: classes.drawerPaper,
-            }}
-          >
+            }}>
             {children}
           </Drawer>
         </Hidden>
@@ -206,9 +190,7 @@ const EditorTitle = ({ groupId, value, disabled, handleChange }) => {
         },
       }}
       disabled={disabled}
-      onChange={(e) =>
-        e.target.value ? handleChange(e.target.value) : handleChange(groupId)
-      }
+      onChange={(e) => (e.target.value ? handleChange(e.target.value) : handleChange(groupId))}
     />
   );
 };
