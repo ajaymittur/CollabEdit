@@ -123,7 +123,7 @@ function TextEditor() {
               setError(null);
               setOpenAdd(false);
             }}>
-            <DialogTitle>Subscribe</DialogTitle>
+            <DialogTitle>Add Editor</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 To allow others with the link to edit, please enter the editor's username here.
@@ -164,7 +164,7 @@ function TextEditor() {
               setError(null);
               setOpenRemove(false);
             }}>
-            <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+            <DialogTitle id="form-dialog-title">Remove Editor</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 To revoke an editor's permission to edit the doc, please enter the editor's username
