@@ -44,12 +44,14 @@ function RichTextEditor({ groupId, readOnly }) {
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    socket.on(`new-doc-value-${groupId}`, (newValue) => {
+    socket.emit("join", groupId);
+
+    socket.on("new-doc-value", (newValue) => {
       Transforms.deselect(editor);
       setValue(newValue);
     });
 
-    socket.on(`new-doc-title-${groupId}`, (newTitle) => {
+    socket.on("new-doc-title", (newTitle) => {
       setTitle(newTitle);
     });
 
@@ -131,8 +133,8 @@ function RichTextEditor({ groupId, readOnly }) {
           variant="contained"
           color="primary"
           style={{ width: "15%", marginRight: "1%" }}
-          onClick={() => handleCopyClipboard()}
-        >
+          disabled={readOnly}
+          onClick={() => handleCopyClipboard()}>
           {copyStatus}
         </Button>
         <EditorSaveButton

@@ -13,12 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
-import {
-  EditorPaper,
-  EditorSaveButton,
-  EditorTitle,
-  EditorToolbar,
-} from "../EditorComponents";
+import { EditorPaper, EditorSaveButton, EditorTitle, EditorToolbar } from "../EditorComponents";
 import { css } from "emotion";
 import io from "socket.io-client";
 import "./prism.css";
@@ -62,16 +57,18 @@ function CodeEditor({ groupId, readOnly }) {
   useEffect(() => {
     socket = io(ENDPOINT);
 
-    socket.on(`new-code-value-${groupId}`, (newValue) => {
+    socket.emit("join", groupId);
+
+    socket.on("new-code-value", (newValue) => {
       Transforms.deselect(editor);
       setValue(newValue);
     });
 
-    socket.on(`new-code-title-${groupId}`, (newTitle) => {
+    socket.on("new-code-title", (newTitle) => {
       setTitle(newTitle);
     });
 
-    socket.on(`new-code-language-${groupId}`, (newLanguage) => {
+    socket.on("new-code-language", (newLanguage) => {
       setLanguage(newLanguage);
     });
 
@@ -170,7 +167,7 @@ function CodeEditor({ groupId, readOnly }) {
             labelId="langSelector"
             id="langSelect"
             value={language}
-            readOnly={readOnly}
+            disabled={readOnly}
             onChange={(e) => handleLanguageChange(e.target.value)}>
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
@@ -188,8 +185,8 @@ function CodeEditor({ groupId, readOnly }) {
             variant="contained"
             color="primary"
             style={{ width: "15%", marginRight: "1%" }}
-            onClick={() => handleCopyClipboard()}
-          >
+            disabled={readOnly}
+            onClick={() => handleCopyClipboard()}>
             {copyStatus}
           </Button>
           <EditorSaveButton
