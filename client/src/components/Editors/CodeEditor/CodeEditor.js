@@ -21,6 +21,7 @@ import {
   EditorSaveButton,
   EditorTitle,
   EditorToolbar,
+  EditorCopyButton,
 } from "../EditorComponents";
 import { css } from "emotion";
 import io from "socket.io-client";
@@ -196,14 +197,10 @@ function CodeEditor({ groupId, readOnly }) {
             disabled={readOnly}
             handleChange={handleTitleChange}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "15%", marginRight: "1%" }}
-            onClick={() => handleCopyClipboard()}
-          >
-            {copyStatus}
-          </Button>
+          <EditorCopyButton
+            handleCopyClipboard={handleCopyClipboard}
+            copyStatus={copyStatus}
+          />
           <EditorSaveButton
             title={title}
             value={value}

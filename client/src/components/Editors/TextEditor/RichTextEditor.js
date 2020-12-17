@@ -15,6 +15,7 @@ import {
   EditorSaveButton,
   EditorTitle,
   EditorToolbar,
+  EditorCopyButton,
 } from "../EditorComponents";
 import { ENDPOINT } from "../../../routes/routes";
 
@@ -37,7 +38,10 @@ function RichTextEditor({ groupId, readOnly }) {
   const [copyStatus, setCopyStatus] = useState("Copy Invite Code");
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
-  const editor = useMemo(() => withLinks(withHistory(withReact(createEditor()))), []);
+  const editor = useMemo(
+    () => withLinks(withHistory(withReact(createEditor()))),
+    []
+  );
 
   const GETSINGLEDOC = `/docs/${groupId}`;
 
@@ -127,14 +131,11 @@ function RichTextEditor({ groupId, readOnly }) {
           disabled={readOnly}
           handleChange={handleTitleChange}
         />
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ width: "15%", marginRight: "1%" }}
-          onClick={() => handleCopyClipboard()}
-        >
-          {copyStatus}
-        </Button>
+        <EditorCopyButton
+          handleCopyClipboard={handleCopyClipboard}
+          copyStatus={copyStatus}
+        />
+
         <EditorSaveButton
           title={title}
           value={value}
@@ -273,7 +274,10 @@ const Element = ({ attributes, children, element }) => {
   switch (element.type) {
     case "block-quote":
       return (
-        <blockquote {...attributes} style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}>
+        <blockquote
+          {...attributes}
+          style={{ borderLeft: "2px solid #ddd", paddingLeft: "10px" }}
+        >
           {children}
         </blockquote>
       );
