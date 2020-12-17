@@ -5,6 +5,9 @@ import "prismjs/components/prism-sql";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-c";
+import "prismjs/components/prism-bash";
+import "prismjs/components/prism-dart";
+import "prismjs/components/prism-php";
 import { Slate, withReact } from "slate-react";
 import { Text, createEditor, Transforms } from "slate";
 import { withHistory } from "slate-history";
@@ -160,7 +163,12 @@ function CodeEditor({ groupId, readOnly }) {
 
   return (
     <>
-      <Slate editor={editor} value={value} onChange={handleValueChange} className={classes.color}>
+      <Slate
+        editor={editor}
+        value={value}
+        onChange={handleValueChange}
+        className={classes.color}
+      >
         <EditorToolbar>
           <Select
             classes={{
@@ -171,12 +179,16 @@ function CodeEditor({ groupId, readOnly }) {
             id="langSelect"
             value={language}
             readOnly={readOnly}
-            onChange={(e) => handleLanguageChange(e.target.value)}>
+            onChange={(e) => handleLanguageChange(e.target.value)}
+          >
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
             <MenuItem value="c">C/C++</MenuItem>
             <MenuItem value="sql">SQL</MenuItem>
             <MenuItem value="java">Java</MenuItem>
+            <MenuItem value="bash">Bash</MenuItem>
+            <MenuItem value="dart">Dart</MenuItem>
+            <MenuItem value="php">PHP</MenuItem>
           </Select>
           <EditorTitle
             groupId={groupId}
@@ -275,7 +287,8 @@ const Leaf = ({ attributes, children, leaf }) => {
         css`
           color: #dd4a68;
         `}
-      `}>
+      `}
+    >
       {children}
     </span>
   );
