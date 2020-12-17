@@ -192,14 +192,11 @@ function CodeEditor({ groupId, readOnly }) {
             disabled={readOnly}
             handleChange={handleTitleChange}
           />
-          <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "15%", marginRight: "1%" }}
+          <EditorCopyButton
+            handleCopyClipboard={handleCopyClipboard}
+            copyStatus={copyStatus}
             disabled={readOnly}
-            onClick={() => handleCopyClipboard()}>
-            {copyStatus}
-          </Button>
+          />
           <EditorSaveButton
             title={title}
             value={value}
