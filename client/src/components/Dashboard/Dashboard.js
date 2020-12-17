@@ -28,7 +28,12 @@ import TextField from "@material-ui/core/TextField";
 import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 import { v4 as uuidv4 } from "uuid";
 
-import { GETDOCS, GETSHAREDDOCS, GETCODE, GETSHAREDCODE } from "../../routes/routes";
+import {
+  GETDOCS,
+  GETSHAREDDOCS,
+  GETCODE,
+  GETSHAREDCODE,
+} from "../../routes/routes";
 
 const drawerWidth = 250;
 
@@ -123,7 +128,8 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!sharedDocs.data) throw Error(`Null response from ${GETSHAREDDOCS}`);
+        if (!sharedDocs.data)
+          throw Error(`Null response from ${GETSHAREDDOCS}`);
         setSharedDocs(sharedDocs.data);
 
         const myCode = await axios.get(GETCODE, {
@@ -137,7 +143,8 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!sharedCode.data) throw Error(`Null response from ${GETSHAREDCODE}`);
+        if (!sharedCode.data)
+          throw Error(`Null response from ${GETSHAREDCODE}`);
         setSharedCode(sharedCode.data);
       } catch (err) {
         console.error(err);
@@ -185,7 +192,8 @@ function Dashboard() {
               pathname: `/docs/groups/${id}`,
               state: { newDoc: false },
             })
-          }>
+          }
+        >
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -204,7 +212,8 @@ function Dashboard() {
           state: { newDoc: false },
         })
       }
-      key={id}>
+      key={id}
+    >
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -239,7 +248,8 @@ function Dashboard() {
               pathname: `/code/groups/${id}`,
               state: { newCode: false },
             })
-          }>
+          }
+        >
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteCode(id)}>
@@ -258,7 +268,8 @@ function Dashboard() {
           state: { newCode: false },
         })
       }
-      key={id}>
+      key={id}
+    >
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -274,13 +285,18 @@ function Dashboard() {
             color="inherit"
             onClick={toggleOpen}
             edge="start"
-            className={classes.buttonSpacing}>
+            className={classes.buttonSpacing}
+          >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             {username}
           </Typography>
-          <Button color="inherit" startIcon={<ExitToAppIcon />} onClick={handleSignOut}>
+          <Button
+            color="inherit"
+            startIcon={<ExitToAppIcon />}
+            onClick={handleSignOut}
+          >
             Sign Out
           </Button>
         </Toolbar>
@@ -290,7 +306,8 @@ function Dashboard() {
         className={drawerStyles}
         classes={{
           paper: paperStyles,
-        }}>
+        }}
+      >
         <div className={classes.toolbar} />
         <Divider />
         <List>
@@ -298,9 +315,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 0}
-            onClick={(e) => setSelectedIndex(0)}>
+            onClick={(e) => setSelectedIndex(0)}
+          >
             <ListItemIcon>
-              <DescriptionIcon color={selectedIndex === 0 ? "primary" : "inherit"} />
+              <DescriptionIcon
+                color={selectedIndex === 0 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="My Docs" />
           </ListItem>
@@ -308,9 +328,12 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 1}
-            onClick={(e) => setSelectedIndex(1)}>
+            onClick={(e) => setSelectedIndex(1)}
+          >
             <ListItemIcon>
-              <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
+              <FolderSharedIcon
+                color={selectedIndex === 1 ? "primary" : "inherit"}
+              />
             </ListItemIcon>
             <ListItemText primary="Docs Shared With Me" />
           </ListItem>
@@ -322,7 +345,8 @@ function Dashboard() {
                 pathname: `/docs/groups/${uuidv4()}`,
                 state: { newDoc: true },
               })
-            }>
+            }
+          >
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
@@ -369,11 +393,11 @@ function Dashboard() {
           </ListItem>
         </List>
       </Drawer>
-      <main className={classes.content}>
+      <main className={classes.content} style={{ height: "1%" }}>
         <div className={classes.toolbar} />
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} justify="center">
               <TextField
                 autoComplete="invitecode"
                 name="inviteCode"
@@ -382,17 +406,19 @@ function Dashboard() {
                 fullWidth
                 id="inviteCode"
                 label="Invite Code"
+                size="small"
                 autoFocus
                 onChange={(e) => setInviteCode(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} justify="center">
               <Button
-                fullWidth
+                //fullWidth
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                style={{ width: "20%", height: "100%" }}
+                size="medium"
+                style={{ height: "100%" }}
                 onClick={() => handleInvite()}
               >
                 Submit

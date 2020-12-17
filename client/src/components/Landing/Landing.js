@@ -100,7 +100,12 @@ function Landing() {
       <CssBaseline />
       <AppBar position="relative">
         <Toolbar>
-          <img src={logo} style={{ marginRight: "5px" }} alt="logo" className={classes.logo} />
+          <img
+            src={logo}
+            style={{ marginRight: "5px" }}
+            alt="logo"
+            className={classes.logo}
+          />
           <Typography variant="h6" color="inherit" noWrap>
             CollabEdit
           </Typography>
@@ -109,10 +114,21 @@ function Landing() {
       <main>
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+            <Typography
+              component="h1"
+              variant="h2"
+              align="center"
+              color="textPrimary"
+              gutterBottom
+            >
               CollabEdit
             </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
+            <Typography
+              variant="h5"
+              align="center"
+              color="textSecondary"
+              paragraph
+            >
               The C³ Web-App
             </Typography>
 
@@ -124,12 +140,18 @@ function Landing() {
                     color="primary"
                     style={{ color: "white" }}
                     component={Link}
-                    to="/login">
+                    to="/login"
+                  >
                     Sign in
                   </Button>
                 </Grid>
                 <Grid item>
-                  <Button variant="outlined" color="primary" component={Link} to="/signup">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    component={Link}
+                    to="/signup"
+                  >
                     Sign up
                   </Button>
                 </Grid>
@@ -138,8 +160,9 @@ function Landing() {
             <form
               className={classes.form}
               style={{ marginLeft: "20%", marginTop: "5%" }}
-              noValidate>
-              <Grid container spacing={2}>
+              noValidate
+            >
+              <Grid container spacing={2} style={{ marginTop: "7%" }}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     autoComplete="invitecode"
@@ -149,18 +172,33 @@ function Landing() {
                     fullWidth
                     id="inviteCode"
                     label="Invite Code"
+                    size="small"
                     autoFocus
                     onChange={(e) => setInviteCode(e.target.value)}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  style={{
+                    marginBottom: "-5%",
+                  }}
+                >
+                  <InputLabel
+                    style={{ height: "10%", paddingBottom: "9%" }}
+                    id="demo-simple-select-label"
+                  >
+                    Type
+                  </InputLabel>
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={inviteType}
-                    onChange={(e) => setInviteType(e.target.value)}>
+                    style={{ height: "10%", paddingBottom: "5%" }}
+                    onChange={(e) => setInviteType(e.target.value)}
+                  >
                     <MenuItem value={"docs"}>Docs</MenuItem>
                     <MenuItem value={"code"}>Code</MenuItem>
                   </Select>
@@ -171,8 +209,13 @@ function Landing() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    style={{ width: "40%", height: "100%", marginLeft: "55%" }}
-                    onClick={() => handleInvite()}>
+                    style={{
+                      width: "40%",
+                      height: "100%",
+                      marginLeft: "55%",
+                    }}
+                    onClick={() => handleInvite()}
+                  >
                     Go!
                   </Button>
                 </Grid>
@@ -187,7 +230,12 @@ function Landing() {
                 <Card className={classes.card}>
                   <CardMedia className={classes.cardMedia} image={logos[i]} />
                   <CardContent className={classes.cardContent}>
-                    <Typography gutterBottom variant="h5" component="h2" align="center">
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="h2"
+                      align="center"
+                    >
                       {head[i]}
                     </Typography>
                     <Typography align="center">{desc[i]}</Typography>
