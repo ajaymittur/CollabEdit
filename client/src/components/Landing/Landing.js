@@ -50,10 +50,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     boxShadow: theme.shadows[2],
     '&:hover':{
-      transiton:"3s ease-out",
+      transiton:"5s ease-in",
       width: theme.spacing(35),
       height: theme.spacing(55),
-      boxShadow: theme.shadows[7],
+      boxShadow: theme.shadows[20],
       backgroundColor: "#b2dfdb",
   },
   },
