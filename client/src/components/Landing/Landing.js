@@ -54,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
       width: theme.spacing(35),
       height: theme.spacing(55),
       boxShadow: theme.shadows[7],
+      backgroundColor: "#b2dfdb",
   },
   },
   cardMedia: {
