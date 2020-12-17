@@ -21,7 +21,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="/">
         CollabEdit
       </Link>{" "}
       {new Date().getFullYear()}
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: "#1E417E",
+    backgroundColor: "#00695c",
   },
   form: {
     width: "100%",

@@ -18,9 +18,9 @@ import logo3 from "./assets/icon4edit2.png";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography variant="body2" color="secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="http://localhost:3000/">
+      <Link color="secondary" href="http://localhost:3000/">
         CollabEdit
       </Link>{' '}
       {new Date().getFullYear()}
@@ -31,7 +31,7 @@ function Copyright() {
 
 const useStyles = makeStyles((theme) => ({
   logo: {
-    maxWidth: 43,
+    maxWidth: 60,
   },
   heroContent: {
     backgroundColor: 'theme.palette.background.paper',
@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
   footer: {
     backgroundColor: 'theme.palette.background.paper',
     padding: theme.spacing(6),
+    bottom: 0,
   },
 }));
 
@@ -81,10 +82,7 @@ function Landing() {
       <CssBaseline />
       <AppBar position="relative">
         <Toolbar>
-          <img src={logo} style={{marginRight: "5px"}} alt="logo" className={classes.logo} />
-          <Typography variant="h6" color="inherit" noWrap>
-            CollabEdit
-          </Typography>
+          <img src={logo} style={{marginRight: "10px"}} alt="logo" className={classes.logo} component={Link} to="/"/>
         </Toolbar>
       </AppBar>
       <main>
