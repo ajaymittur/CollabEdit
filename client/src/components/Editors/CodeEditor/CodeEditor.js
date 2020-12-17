@@ -16,7 +16,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Button from "@material-ui/core/Button";
-import { EditorPaper, EditorSaveButton, EditorTitle, EditorToolbar } from "../EditorComponents";
+import {
+  EditorPaper,
+  EditorSaveButton,
+  EditorTitle,
+  EditorToolbar,
+  EditorCopyButton,
+} from "../EditorComponents";
 import { css } from "emotion";
 import io from "socket.io-client";
 import "./prism.css";
@@ -176,7 +182,8 @@ function CodeEditor({ groupId, readOnly }) {
             id="langSelect"
             value={language}
             disabled={readOnly}
-            onChange={(e) => handleLanguageChange(e.target.value)}>
+            onChange={(e) => handleLanguageChange(e.target.value)}
+          >
             <MenuItem value="javascript">Javascript</MenuItem>
             <MenuItem value="python">Python</MenuItem>
             <MenuItem value="c">C/C++</MenuItem>
