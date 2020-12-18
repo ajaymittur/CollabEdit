@@ -10,6 +10,7 @@ const generateToken = (payload) => {
 const login = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json("Incorrect Login");
+  let name;
 
   try {
     const existingUser = await User.findOne({ username });
@@ -17,6 +18,8 @@ const login = async (req, res) => {
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
     if (!validPassword) return res.status(400).send("Invalid Password");
+
+    name = existingUser.name;
   } catch (err) {
     return res.status(500).json(err);
   }
@@ -25,6 +28,7 @@ const login = async (req, res) => {
   console.log("Logged In!");
   const response = {
     username,
+    name,
     token,
   };
   return res.json(response);

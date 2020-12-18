@@ -28,12 +28,7 @@ import TextField from "@material-ui/core/TextField";
 import { useJupiterListItemStyles } from "@mui-treasury/styles/listItem/jupiter";
 import { v4 as uuidv4 } from "uuid";
 
-import {
-  GETDOCS,
-  GETSHAREDDOCS,
-  GETCODE,
-  GETSHAREDCODE,
-} from "../../routes/routes";
+import { GETDOCS, GETSHAREDDOCS, GETCODE, GETSHAREDCODE } from "../../routes/routes";
 
 const drawerWidth = 250;
 
@@ -98,7 +93,7 @@ function Dashboard() {
   document.title = "CollabEdit | Dashboard";
 
   const token = sessionStorage.getItem("token");
-  const username = sessionStorage.getItem("username") || "User";
+  const name = sessionStorage.getItem("name") || "User";
   const history = useHistory();
   const classes = useStyles();
   const listClasses = useJupiterListItemStyles();
@@ -108,9 +103,7 @@ function Dashboard() {
   const [code, setCode] = useState([]);
   const [sharedCode, setSharedCode] = useState([]);
   const [inviteCode, setInviteCode] = useState("");
-  const [drawerStyles, setDrawerStyles] = useState(
-    classes.drawer + " " + classes.drawerClose
-  );
+  const [drawerStyles, setDrawerStyles] = useState(classes.drawer + " " + classes.drawerClose);
   const [paperStyles, setPaperStyles] = useState(classes.drawerClose);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -128,8 +121,7 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!sharedDocs.data)
-          throw Error(`Null response from ${GETSHAREDDOCS}`);
+        if (!sharedDocs.data) throw Error(`Null response from ${GETSHAREDDOCS}`);
         setSharedDocs(sharedDocs.data);
 
         const myCode = await axios.get(GETCODE, {
@@ -143,8 +135,7 @@ function Dashboard() {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!sharedCode.data)
-          throw Error(`Null response from ${GETSHAREDCODE}`);
+        if (!sharedCode.data) throw Error(`Null response from ${GETSHAREDCODE}`);
         setSharedCode(sharedCode.data);
       } catch (err) {
         console.error(err);
@@ -192,8 +183,7 @@ function Dashboard() {
               pathname: `/docs/groups/${id}`,
               state: { newDoc: false },
             })
-          }
-        >
+          }>
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteDoc(id)}>
@@ -212,8 +202,7 @@ function Dashboard() {
           state: { newDoc: false },
         })
       }
-      key={id}
-    >
+      key={id}>
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -248,8 +237,7 @@ function Dashboard() {
               pathname: `/code/groups/${id}`,
               state: { newCode: false },
             })
-          }
-        >
+          }>
           <KeyboardArrowRightIcon />
         </IconButton>
         <IconButton color="secondary" onClick={() => deleteCode(id)}>
@@ -268,8 +256,7 @@ function Dashboard() {
           state: { newCode: false },
         })
       }
-      key={id}
-    >
+      key={id}>
       <ListItemText primary={title} secondary={Date(created_on)} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
@@ -285,18 +272,13 @@ function Dashboard() {
             color="inherit"
             onClick={toggleOpen}
             edge="start"
-            className={classes.buttonSpacing}
-          >
+            className={classes.buttonSpacing}>
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {username}
+            {name}
           </Typography>
-          <Button
-            color="inherit"
-            startIcon={<ExitToAppIcon />}
-            onClick={handleSignOut}
-          >
+          <Button color="inherit" startIcon={<ExitToAppIcon />} onClick={handleSignOut}>
             Sign Out
           </Button>
         </Toolbar>
@@ -306,8 +288,7 @@ function Dashboard() {
         className={drawerStyles}
         classes={{
           paper: paperStyles,
-        }}
-      >
+        }}>
         <div className={classes.toolbar} />
         <Divider />
         <List>
@@ -315,12 +296,9 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 0}
-            onClick={(e) => setSelectedIndex(0)}
-          >
+            onClick={(e) => setSelectedIndex(0)}>
             <ListItemIcon>
-              <DescriptionIcon
-                color={selectedIndex === 0 ? "primary" : "inherit"}
-              />
+              <DescriptionIcon color={selectedIndex === 0 ? "primary" : "inherit"} />
             </ListItemIcon>
             <ListItemText primary="My Docs" />
           </ListItem>
@@ -328,12 +306,9 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 1}
-            onClick={(e) => setSelectedIndex(1)}
-          >
+            onClick={(e) => setSelectedIndex(1)}>
             <ListItemIcon>
-              <FolderSharedIcon
-                color={selectedIndex === 1 ? "primary" : "inherit"}
-              />
+              <FolderSharedIcon color={selectedIndex === 1 ? "primary" : "inherit"} />
             </ListItemIcon>
             <ListItemText primary="Docs Shared With Me" />
           </ListItem>
@@ -345,8 +320,7 @@ function Dashboard() {
                 pathname: `/docs/groups/${uuidv4()}`,
                 state: { newDoc: true },
               })
-            }
-          >
+            }>
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
@@ -356,8 +330,7 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 2}
-            onClick={(e) => setSelectedIndex(2)}
-          >
+            onClick={(e) => setSelectedIndex(2)}>
             <ListItemIcon>
               <CodeIcon color={selectedIndex === 2 ? "primary" : "inherit"} />
             </ListItemIcon>
@@ -367,12 +340,9 @@ function Dashboard() {
             classes={listClasses}
             button
             selected={selectedIndex === 3}
-            onClick={(e) => setSelectedIndex(3)}
-          >
+            onClick={(e) => setSelectedIndex(3)}>
             <ListItemIcon>
-              <FolderSharedIcon
-                color={selectedIndex === 3 ? "primary" : "inherit"}
-              />
+              <FolderSharedIcon color={selectedIndex === 3 ? "primary" : "inherit"} />
             </ListItemIcon>
             <ListItemText primary="Codes Shared With Me" />
           </ListItem>
@@ -384,8 +354,7 @@ function Dashboard() {
                 pathname: `/code/groups/${uuidv4()}`,
                 state: { newCode: true },
               })
-            }
-          >
+            }>
             <ListItemIcon>
               <AddIcon color="secondary" />
             </ListItemIcon>
@@ -419,8 +388,7 @@ function Dashboard() {
                 className={classes.submit}
                 size="medium"
                 style={{ height: "100%" }}
-                onClick={() => handleInvite()}
-              >
+                onClick={() => handleInvite()}>
                 Submit
               </Button>
             </Grid>

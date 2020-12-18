@@ -96,6 +96,7 @@ function SignUpForm(props) {
           console.log(res.data);
           sessionStorage.setItem("token", res.data.token);
           sessionStorage.setItem("username", res.data.username);
+          sessionStorage.setItem("name", res.data.name);
 
           history.push({
             pathname: "/dashboard", //Enter dashboard route here

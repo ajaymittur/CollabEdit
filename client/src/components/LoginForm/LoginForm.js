@@ -38,9 +38,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundImage: "url(https://source.unsplash.com/collection/1132955)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
-      theme.palette.type === "light"
-        ? theme.palette.grey[50]
-        : theme.palette.grey[900],
+      theme.palette.type === "light" ? theme.palette.grey[50] : theme.palette.grey[900],
     backgroundSize: "cover",
     backgroundPosition: "center",
   },
@@ -81,11 +79,9 @@ function LoginForm() {
   function handleSubmit(data) {
     let error = {};
 
-    if (!password || !username)
-      error.fill = "Make sure you fill in all the fields";
+    if (!password || !username) error.fill = "Make sure you fill in all the fields";
 
-    if (password.length < 8)
-      error.pass = "Password should be atleast 8 characters in length";
+    if (password.length < 8) error.pass = "Password should be atleast 8 characters in length";
 
     setErrors(error);
 
@@ -98,6 +94,7 @@ function LoginForm() {
         .then((res) => {
           sessionStorage.setItem("token", res.data.token);
           sessionStorage.setItem("username", res.data.username);
+          sessionStorage.setItem("name", res.data.name);
 
           history.push("/dashboard");
         })
@@ -152,8 +149,7 @@ function LoginForm() {
               color="primary"
               className={classes.submit}
               endIcon={<ExitToAppIcon />}
-              onClick={handleSubmit}
-            >
+              onClick={handleSubmit}>
               Sign In
             </Button>
             <Grid container>
@@ -168,9 +164,7 @@ function LoginForm() {
                 <AlertTitle>Error</AlertTitle>
                 There were some errors with your submission <br></br>
                 <strong>
-                  {Object.keys(errors).map(
-                    (key, index) => `${index + 1}) ` + errors[key] + " "
-                  )}
+                  {Object.keys(errors).map((key, index) => `${index + 1}) ` + errors[key] + " ")}
                   <br></br>
                 </strong>
               </Alert>
