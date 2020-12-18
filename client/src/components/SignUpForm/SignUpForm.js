@@ -21,7 +21,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="#">
+      <Link color="inherit" href="/">
         CollabEdit
       </Link>{" "}
       {new Date().getFullYear()}
@@ -80,7 +80,8 @@ function SignUpForm(props) {
     if (!email || !password || !repassword || !name || !username)
       error.fill = "Make sure you fill in all the fields";
 
-    if (password.length < 8) error.pass = "Password should be atleast 8 characters in length";
+    if (password.length < 8)
+      error.pass = "Password should be atleast 8 characters in length";
 
     setErrors(error);
 
@@ -193,7 +194,8 @@ function SignUpForm(props) {
             color="primary"
             className={classes.submit}
             endIcon={<ExitToAppIcon />}
-            onClick={handleSubmit}>
+            onClick={handleSubmit}
+          >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
@@ -207,7 +209,9 @@ function SignUpForm(props) {
                 <AlertTitle>Error</AlertTitle>
                 There were some errors with your submission <br></br>
                 <strong>
-                  {Object.keys(errors).map((key, index) => `${index + 1}) ` + errors[key] + " ")}
+                  {Object.keys(errors).map(
+                    (key, index) => `${index + 1}) ` + errors[key] + " "
+                  )}
                   <br></br>
                 </strong>
               </Alert>
