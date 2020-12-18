@@ -16,10 +16,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
-import logo from "./assets/icon5CollabEditLogo.png";
 import logo1 from "./assets/icon1people.png";
 import logo2 from "./assets/icon2texteditor.png";
 import logo3 from "./assets/icon4edit2.png";
+import logo from "./assets/CoEditAsset1.png";
 
 function Copyright() {
   return (
