@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function TextEditor() {
-  const username = sessionStorage.getItem("username") || "User";
+  const name = sessionStorage.getItem("name") || "User";
   const token = sessionStorage.getItem("token");
   const { groupId } = useParams();
   const history = useHistory();
@@ -108,7 +108,7 @@ function TextEditor() {
             Back
           </Button>
           <Typography variant="h6" className={classes.title}>
-            {username}
+            {name}
           </Typography>
           <Button
             color="inherit"
