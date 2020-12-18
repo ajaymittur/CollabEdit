@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TextEditor() {
   const name = sessionStorage.getItem("name") || "User";
+  const usernname = sessionStorage.getItem("username") || "User";
   const token = sessionStorage.getItem("token");
   const { groupId } = useParams();
   const history = useHistory();
