@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 
 function CodeEditorPage() {
   const name = sessionStorage.getItem("name") || "User";
+  const username = sessionStorage.getItem("username") || "User";
   const token = sessionStorage.getItem("token");
   const { groupId } = useParams();
   const history = useHistory();
