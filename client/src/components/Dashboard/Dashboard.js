@@ -157,7 +157,7 @@ function Dashboard() {
   const toggleOpen = () => (open ? setOpen(false) : setOpen(true));
   const handleSignOut = () => {
     sessionStorage.clear();
-    history.push("/login");
+    history.push("/");
   };
 
   const deleteDoc = async (id) => {
