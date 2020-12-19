@@ -173,7 +173,15 @@ function Dashboard() {
   };
 
   const docsList = docs.map(({ _id: id, title, created_on }) => (
-    <ListItem key={id}>
+    <ListItem
+      key={id}
+      button
+      onClick={() =>
+        history.push({
+          pathname: `/docs/groups/${id}`,
+          state: { newDoc: false },
+        })
+      }>
       <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <IconButton
@@ -227,7 +235,15 @@ function Dashboard() {
   };
 
   const codeList = code.map(({ _id: id, title, created_on }) => (
-    <ListItem key={id}>
+    <ListItem
+      key={id}
+      button
+      onClick={() =>
+        history.push({
+          pathname: `/code/groups/${id}`,
+          state: { newCode: false },
+        })
+      }>
       <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <IconButton
