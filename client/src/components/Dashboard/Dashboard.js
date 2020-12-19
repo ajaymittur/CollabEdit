@@ -182,7 +182,7 @@ function Dashboard() {
           state: { newDoc: false },
         })
       }>
-      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
+      <ListItemText primary={title} secondary={new Date(created_on).toGMTString()} />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
@@ -201,7 +201,7 @@ function Dashboard() {
     </ListItem>
   ));
 
-  const sharedDocsList = sharedDocs.map(({ _id: id, title, created_on }) => (
+  const sharedDocsList = sharedDocs.map(({ _id: id, title, created_on, owner }) => (
     <ListItem
       button
       onClick={() =>
@@ -211,7 +211,10 @@ function Dashboard() {
         })
       }
       key={id}>
-      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
+      <ListItemText
+        primary={title}
+        secondary={new Date(created_on).toGMTString() + " by " + owner.name}
+      />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
       </ListItemIcon>
@@ -244,7 +247,7 @@ function Dashboard() {
           state: { newCode: false },
         })
       }>
-      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
+      <ListItemText primary={title} secondary={new Date(created_on).toGMTString()} />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
@@ -263,7 +266,7 @@ function Dashboard() {
     </ListItem>
   ));
 
-  const sharedCodeList = sharedCode.map(({ _id: id, title, created_on }) => (
+  const sharedCodeList = sharedCode.map(({ _id: id, title, created_on, owner }) => (
     <ListItem
       button
       onClick={() =>
@@ -273,7 +276,10 @@ function Dashboard() {
         })
       }
       key={id}>
-      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
+      <ListItemText
+        primary={title}
+        secondary={new Date(created_on).toGMTString() + " by " + owner.name}
+      />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
       </ListItemIcon>
