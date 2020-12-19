@@ -54,9 +54,15 @@ const getCode = async (req, res) => {
 
   const user = await User.findOne({ username });
 
-  const code = await Code.find({ _id: { $in: user.code } }, "title created_on saved_on").sort({
-    saved_on: "desc",
-  });
+  const code = await Code.find({ _id: { $in: user.code } }, "title created_on saved_on")
+    .populate({
+      path: "editors",
+      match: { username: { $ne: username } },
+      select: "name",
+    })
+    .sort({
+      saved_on: "desc",
+    });
 
   res.json(code);
 };
@@ -72,8 +78,6 @@ const getSharedCode = async (req, res) => {
   )
     .populate("owner", "name")
     .sort({ saved_on: "desc" });
-
-  console.log(sharedCode);
 
   res.json(sharedCode);
 };

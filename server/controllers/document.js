@@ -51,9 +51,15 @@ const getDocs = async (req, res) => {
 
   const user = await User.findOne({ username });
 
-  const docs = await Docs.find({ _id: { $in: user.docs } }, "title created_on saved_on").sort({
-    saved_on: "desc",
-  });
+  const docs = await Docs.find({ _id: { $in: user.docs } }, "title created_on saved_on")
+    .populate({
+      path: "editors",
+      match: { username: { $ne: username } },
+      select: "name",
+    })
+    .sort({
+      saved_on: "desc",
+    });
 
   res.json(docs);
 };
@@ -69,8 +75,6 @@ const getSharedDocs = async (req, res) => {
   )
     .populate("owner", "name")
     .sort({ saved_on: "desc" });
-
-  console.log(sharedDocs);
 
   res.json(sharedDocs);
 };

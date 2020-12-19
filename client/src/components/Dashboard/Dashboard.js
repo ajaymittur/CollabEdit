@@ -172,7 +172,15 @@ function Dashboard() {
     }
   };
 
-  const docsList = docs.map(({ _id: id, title, created_on }) => (
+  const getShareString = (editors) => {
+    let str = "";
+    for (let editor of editors) str += editor.name + ", ";
+    str = str.substring(0, str.length - 2);
+    if (str.length == 0) return "";
+    else return " shared with: " + str;
+  };
+
+  const docsList = docs.map(({ _id: id, title, created_on, editors }) => (
     <ListItem
       key={id}
       button
@@ -182,7 +190,10 @@ function Dashboard() {
           state: { newDoc: false },
         })
       }>
-      <ListItemText primary={title} secondary={new Date(created_on).toGMTString()} />
+      <ListItemText
+        primary={title}
+        secondary={new Date(created_on).toGMTString() + getShareString(editors)}
+      />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
@@ -237,7 +248,7 @@ function Dashboard() {
     else history.push(`/code/groups/${inviteCode}`);
   };
 
-  const codeList = code.map(({ _id: id, title, created_on }) => (
+  const codeList = code.map(({ _id: id, title, created_on, editors }) => (
     <ListItem
       key={id}
       button
@@ -247,7 +258,10 @@ function Dashboard() {
           state: { newCode: false },
         })
       }>
-      <ListItemText primary={title} secondary={new Date(created_on).toGMTString()} />
+      <ListItemText
+        primary={title}
+        secondary={new Date(created_on).toGMTString() + getShareString(editors)}
+      />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
