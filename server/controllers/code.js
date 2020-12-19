@@ -54,10 +54,9 @@ const getCode = async (req, res) => {
 
   const user = await User.findOne({ username });
 
-  const code = await Code.find(
-    { _id: { $in: user.code } },
-    "title created_on saved_on"
-  ).sort({ saved_on: "desc" });
+  const code = await Code.find({ _id: { $in: user.code } }, "title created_on saved_on").sort({
+    saved_on: "desc",
+  });
 
   res.json(code);
 };
@@ -70,7 +69,11 @@ const getSharedCode = async (req, res) => {
   const sharedCode = await Code.find(
     { editors: userId, owner: { $ne: userId } },
     "title created_on saved_on"
-  ).sort({ saved_on: "desc" });
+  )
+    .populate("owner", "name")
+    .sort({ saved_on: "desc" });
+
+  console.log(sharedCode);
 
   res.json(sharedCode);
 };
@@ -95,8 +98,7 @@ const addCodeEditor = async (req, res) => {
   const code = await Code.findById(groupId);
   const user = await User.findOne({ username }, "_id");
   const userId = user._id;
-  if (!code.owner.equals(userId))
-    return res.status(401).send(`${username} doesn't own this code`);
+  if (!code.owner.equals(userId)) return res.status(401).send(`${username} doesn't own this code`);
 
   const _editor = await User.findOne({ username: editor }, "_id");
   if (!_editor) return res.status(400).send(`${editor} doesn't exist`);
@@ -118,14 +120,12 @@ const removeCodeEditor = async (req, res) => {
   const code = await Code.findById(groupId);
   const user = await User.findOne({ username });
   const userId = user._id;
-  if (!code.owner.equals(userId))
-    return res.status(401).send("User doesn't own this code");
+  if (!code.owner.equals(userId)) return res.status(401).send("User doesn't own this code");
 
   const _editor = await User.findOne({ username: editor }, "_id");
   if (!_editor) return res.status(400).send(`${editor} doesn't exist`);
   const editorId = _editor._id;
-  if (editorId.equals(userId))
-    return res.status(400).send("Cannot remove owner from editors");
+  if (editorId.equals(userId)) return res.status(400).send("Cannot remove owner from editors");
 
   await code.updateOne({ $pull: { editors: editorId } });
 

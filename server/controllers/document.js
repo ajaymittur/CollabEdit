@@ -66,7 +66,11 @@ const getSharedDocs = async (req, res) => {
   const sharedDocs = await Docs.find(
     { editors: userId, owner: { $ne: userId } },
     "title created_on saved_on"
-  ).sort({ saved_on: "desc" });
+  )
+    .populate("owner", "name")
+    .sort({ saved_on: "desc" });
+
+  console.log(sharedDocs);
 
   res.json(sharedDocs);
 };
