@@ -174,7 +174,7 @@ function Dashboard() {
 
   const docsList = docs.map(({ _id: id, title, created_on }) => (
     <ListItem key={id}>
-      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
@@ -203,7 +203,7 @@ function Dashboard() {
         })
       }
       key={id}>
-      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
       </ListItemIcon>
@@ -228,7 +228,7 @@ function Dashboard() {
 
   const codeList = code.map(({ _id: id, title, created_on }) => (
     <ListItem key={id}>
-      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <IconButton
           className={classes.buttonSpacing}
@@ -257,7 +257,7 @@ function Dashboard() {
         })
       }
       key={id}>
-      <ListItemText primary={title} secondary={Date(created_on)} />
+      <ListItemText primary={title} secondary={new Date(created_on).toString()} />
       <ListItemIcon>
         <KeyboardArrowRightIcon className={classes.buttonSpacing} />
       </ListItemIcon>
